@@ -20,20 +20,20 @@ public class ClubController {
     @PostMapping
     public ResponseEntity<Club> createClub(@RequestBody Club club) {
         Club createdClub = clubService.createClub(club);
-        return ResponseEntity<>(createdClub, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdClub, HttpStatus.CREATED);
     }
 
     // Update existing club
     @PutMapping("/{id}")
     public ResponseEntity<Club> updateClub(@PathVariable Long id, @RequestBody Club club) {
         Club updatedClub = clubService.updateClub(id, club);
-        return ResponseEntity<>(updatedClub, HttpStatus.OK);
+        return new ResponseEntity<>(updatedClub, HttpStatus.OK);
     }
 
     // Delete club
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClub(@PathVariable Long id) {
         clubService.deleteClub(id);
-        return ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

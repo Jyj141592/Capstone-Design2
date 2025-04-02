@@ -29,7 +29,7 @@ public class ClubServiceImpl implements ClubService {
         // Update club fields
         club.setName(updatedClub.getName());
         club.setDescription(updatedClub.getDescription());
-        club.setIsPublic(updatedClub.isPublic());
+        club.setPublic(updatedClub.isPublic());
         // Save updated club
         return clubRepository.save(club);
     }
