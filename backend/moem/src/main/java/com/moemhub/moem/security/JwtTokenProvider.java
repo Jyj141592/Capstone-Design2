@@ -22,7 +22,7 @@ public class JwtTokenProvider {
     private final SecretKey secretKey;
     private final UserDetailsService userDetailsService;
 
-    public JwtTokenProvider(@Value("${jwt.key}") String secret, MoemUserDetailsService userDetailsService) {
+    public JwtTokenProvider(@Value("${jwt.key}") String secret, UserDetailsService userDetailsService) {
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.userDetailsService = userDetailsService;
     }
