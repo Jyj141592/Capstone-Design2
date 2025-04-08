@@ -1,5 +1,6 @@
 package com.moemhub.moem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,8 +35,13 @@ public class Club {
     private boolean isPublic;
 
     // List of club members (OneToMany relation with ClubMember)
+    @JsonIgnore
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClubMember> members = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boards = new ArrayList<>();
 
     // Set club owner (first member as owner)
     public void setOwner(Account owner) {
