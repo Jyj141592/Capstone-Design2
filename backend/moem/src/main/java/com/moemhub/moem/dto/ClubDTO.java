@@ -3,7 +3,7 @@ package com.moemhub.moem.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-public class ClubDTO {
+public class ClubDto {
 
     @Data
     public static class CreateRequest {
