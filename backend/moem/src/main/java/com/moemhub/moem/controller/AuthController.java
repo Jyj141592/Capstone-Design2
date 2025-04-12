@@ -21,11 +21,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtToken> login(@RequestBody LoginDto loginDto) {
-        JwtToken jwtToken = authService.login(loginDto);
-        if(jwtToken != null) {
-            return ResponseEntity.ok(jwtToken);
+        try {
+            JwtToken jwtToken = authService.login(loginDto);
+
+            if (jwtToken != null) {
+                return ResponseEntity.ok(jwtToken);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
         }
-        else{
+        catch (Exception e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
@@ -38,19 +43,29 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<String> refresh(HttpServletRequest request) {
         String refreshToken = request.getHeader(ApplicationConstants.JWT_HEADER);
-        String accessToken = authService.refresh(refreshToken);
-        return ResponseEntity.ok(accessToken);
+        if(refreshToken == null || refreshToken.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            String accessToken = authService.refresh(refreshToken.split(" ")[1]);
+            return ResponseEntity.ok(accessToken);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody RegisterDto registerDto) {
-        if(authService.register(registerDto)){
-            return ResponseEntity.ok().build();
+        try {
+            if (authService.register(registerDto)) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
-    }
-    @PostMapping("/test")
-    public ResponseEntity<Void> test() {
-        return ResponseEntity.ok().build();
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
