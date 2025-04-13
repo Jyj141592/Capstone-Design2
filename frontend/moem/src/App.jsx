@@ -4,8 +4,10 @@ import ClubExplore from "./pages/ClubExplore";
 import Chat from "./pages/Chat";
 import MyClubs from "./pages/MyClubs";
 import ExchangeClubs from "./pages/ExchangeClubs";
-import AppliedClubs from "./pages/AppliedClubs";
 import Account from "./pages/Account";
+import ClubDetail from "./pages/ClubDetail";
+import PostForm from "./pages/PostForm";
+import PostDetail from "./pages/PostDetail";
 
 function App() {
   return (
@@ -16,8 +18,10 @@ function App() {
           <Route path="chat" element={<Chat />} />
           <Route path="myclubs" element={<MyClubs />} />
           <Route path="exchange" element={<ExchangeClubs />} />
-          <Route path="applied" element={<AppliedClubs />} />
           <Route path="account" element={<Account />} />
+          <Route path="club/:id" element={<ClubDetail />} />
+          <Route path="post/write" element={<PostForm />} />
+          <Route path="post/:id" element={<PostDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>
