@@ -1,7 +1,9 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import ClubCard from "../components/ClubCard";
 
 function ClubExplore() {
+  const [activeTab, setActiveTab] = useState("탐색");
+
   const recruitRef = useRef(null);
   const recommendRef = useRef(null);
 
@@ -15,134 +17,235 @@ function ClubExplore() {
     }
   };
 
+  const dummyData = {
+    탐색: {
+      모집: [
+        {
+          id: 1,
+          clubName: "수영 동아리",
+          category: "수영",
+          photoName: "pizzas/spinaci.jpg",
+          // current: 1,
+          // max: 2,
+        },
+        {
+          id: 2,
+          clubName: "댄스 동아리",
+          category: "댄스",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 3,
+          clubName: "음악 동아리",
+          category: "음악",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 4,
+          clubName: "연극 동아리",
+          category: "예술",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 5,
+          clubName: "댄스 동아리",
+          category: "댄스",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 6,
+          clubName: "음악 동아리",
+          category: "음악",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 7,
+          clubName: "연극 동아리",
+          category: "예술",
+          photoName: "pizzas/spinaci.jpg",
+        },
+      ],
+      추천: [
+        {
+          id: 8,
+          clubName: "등산 동아리",
+          category: "야외",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 9,
+          clubName: "게임 동아리",
+          category: "취미",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 10,
+          clubName: "독서 동아리",
+          category: "문화",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 11,
+          clubName: "사진 동아리",
+          category: "미디어",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 12,
+          clubName: "게임 동아리",
+          category: "취미",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 13,
+          clubName: "독서 동아리",
+          category: "문화",
+          photoName: "pizzas/spinaci.jpg",
+        },
+        {
+          id: 14,
+          clubName: "사진 동아리",
+          category: "미디어",
+          photoName: "pizzas/spinaci.jpg",
+        },
+      ],
+    },
+    소속: [
+      {
+        id: 15,
+        clubName: "등산 동아리",
+        category: "야외",
+        photoName: "pizzas/spinaci.jpg",
+      },
+      {
+        id: 16,
+        clubName: "등산 동아리",
+        category: "야외",
+        photoName: "pizzas/spinaci.jpg",
+      },
+      {
+        id: 17,
+        clubName: "등산 동아리",
+        category: "야외",
+        photoName: "pizzas/spinaci.jpg",
+      },
+      {
+        id: 18,
+        clubName: "등산 동아리",
+        category: "야외",
+        photoName: "pizzas/spinaci.jpg",
+      },
+      {
+        id: 19,
+        clubName: "등산 동아리",
+        category: "야외",
+        photoName: "pizzas/spinaci.jpg",
+      },
+    ],
+    교류: [
+      {
+        id: 20,
+        clubName: "AI 동아리",
+        category: "기술",
+        photoName: "pizzas/spinaci.jpg",
+      },
+    ],
+  };
+
+  const renderClubs = () => {
+    if (activeTab === "탐색") {
+      const 모집 = dummyData.탐색.모집 || [];
+      const 추천 = dummyData.탐색.추천 || [];
+
+      return (
+        <>
+          <section style={{ marginBottom: "30px" }}>
+            <h2>모집 중</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <button onClick={() => scroll(recruitRef, "left")}>◀</button>
+              <div
+                ref={recruitRef}
+                style={{
+                  display: "flex",
+                  overflowX: "auto",
+                  scrollBehavior: "smooth",
+                  paddingBottom: "10px",
+                  margin: "0 10px",
+                  width: "100%",
+                  flexWrap: "nowrap",
+                }}
+              >
+                {모집.map((club) => (
+                  <ClubCard key={club.id} {...club} />
+                ))}
+              </div>
+              <button onClick={() => scroll(recruitRef, "right")}>▶</button>
+            </div>
+          </section>
+
+          <section>
+            <h2>추천</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <button onClick={() => scroll(recommendRef, "left")}>◀</button>
+              <div
+                ref={recommendRef}
+                style={{
+                  display: "flex",
+                  overflowX: "auto",
+                  scrollBehavior: "smooth",
+                  paddingBottom: "10px",
+                  margin: "0 10px",
+                  width: "100%",
+                  flexWrap: "nowrap",
+                }}
+              >
+                {추천.map((club) => (
+                  <ClubCard key={club.id} {...club} />
+                ))}
+              </div>
+              <button onClick={() => scroll(recommendRef, "right")}>▶</button>
+            </div>
+          </section>
+        </>
+      );
+    }
+
+    const tabData = dummyData[activeTab] || [];
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+        {tabData.map((club) => (
+          <ClubCard key={club.id} {...club} />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div>
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          borderBottom: "1px solid #ccc",
+          marginBottom: "20px",
         }}
       >
-        <h1>동아리</h1>
-        <button>생성</button>
+        {["탐색", "소속", "교류"].map((tab) => (
+          <div
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              marginRight: "20px",
+              padding: "10px 5px",
+              cursor: "pointer",
+              fontWeight: activeTab === tab ? "bold" : "normal",
+              borderBottom: activeTab === tab ? "3px solid black" : "none",
+            }}
+          >
+            {tab}
+          </div>
+        ))}
       </div>
-
-      {/* 모집 중인 동아리 */}
-      <section style={{ marginTop: "20px" }}>
-        <h2>모집 중인 동아리</h2>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <button onClick={() => scroll(recruitRef, "left")}>◀</button>
-          <div
-            ref={recruitRef}
-            style={{
-              display: "flex",
-              overflowX: "auto",
-              scrollBehavior: "smooth",
-              paddingBottom: "10px",
-              margin: "0 10px",
-              width: "100%",
-              flexWrap: "nowrap",
-            }}
-          >
-            <ClubCard
-              photoName="club1.jpg"
-              clubName="수영 동아리"
-              category="수영"
-              member={30}
-            />
-            <ClubCard
-              photoName="club2.jpg"
-              clubName="축구 동아리"
-              category="축구"
-              member={25}
-            />
-            <ClubCard
-              photoName="club3.jpg"
-              clubName="요리 동아리"
-              category="요리"
-              member={15}
-            />
-            <ClubCard
-              photoName="club4.jpg"
-              clubName="등산 동아리"
-              category="야외"
-              member={22}
-            />
-            <ClubCard
-              photoName="club5.jpg"
-              clubName="요가 동아리"
-              category="헬스"
-              member={18}
-            />
-            <ClubCard
-              photoName="club6.jpg"
-              clubName="드론 동아리"
-              category="기술"
-              member={10}
-            />
-          </div>
-          <button onClick={() => scroll(recruitRef, "right")}>▶</button>
-        </div>
-      </section>
-
-      {/* 추천 동아리 */}
-      <section style={{ marginTop: "30px" }}>
-        <h2>추천 동아리</h2>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <button onClick={() => scroll(recommendRef, "left")}>◀</button>
-          <div
-            ref={recommendRef}
-            style={{
-              display: "flex",
-              overflowX: "auto",
-              scrollBehavior: "smooth",
-              paddingBottom: "10px",
-              margin: "0 10px",
-              width: "100%",
-              flexWrap: "nowrap",
-            }}
-          >
-            <ClubCard
-              photoName="club7.jpg"
-              clubName="음악 동아리"
-              category="음악"
-              member={18}
-            />
-            <ClubCard
-              photoName="club8.jpg"
-              clubName="댄스 동아리"
-              category="댄스"
-              member={12}
-            />
-            <ClubCard
-              photoName="club9.jpg"
-              clubName="보드게임 동아리"
-              category="취미"
-              member={20}
-            />
-            <ClubCard
-              photoName="club10.jpg"
-              clubName="사진 동아리"
-              category="예술"
-              member={17}
-            />
-            <ClubCard
-              photoName="club11.jpg"
-              clubName="영화 동아리"
-              category="문화"
-              member={22}
-            />
-            <ClubCard
-              photoName="club12.jpg"
-              clubName="봉사 동아리"
-              category="사회"
-              member={19}
-            />
-          </div>
-          <button onClick={() => scroll(recommendRef, "right")}>▶</button>
-        </div>
-      </section>
+      {renderClubs()}
     </div>
   );
 }
