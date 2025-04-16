@@ -1,3 +1,4 @@
+import CreateClub from "./pages/CreateClub";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthProvider from "./auth/AuthContext";
 import SidebarLayout from "./layouts/SidebarLayout";
@@ -28,6 +29,7 @@ function App() {
             <Route path="club/:id" element={<ClubDetail />} />
             <Route path="post/write" element={<PostForm />} />
             <Route path="post/:id" element={<PostDetail />} />
+            <Route path="/club/create" element={<CreateClub />} />
           </Route>
         </Routes>
       </BrowserRouter>

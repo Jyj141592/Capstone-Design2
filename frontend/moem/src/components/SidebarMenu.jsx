@@ -10,7 +10,7 @@ const SidebarMenu = () => {
       </div>
       <ul>
         <li>
-          <Link to="/clubs">동아리</Link>
+          <Link to="/clubs">모임</Link>
         </li>
         <li>
           <Link to="/account">계정</Link>

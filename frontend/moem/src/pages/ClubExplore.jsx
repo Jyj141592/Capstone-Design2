@@ -22,132 +22,112 @@ function ClubExplore() {
       모집: [
         {
           id: 1,
-          clubName: "수영 동아리",
-          category: "수영",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "치매 모임",
+          category: "치매",
           // current: 1,
           // max: 2,
         },
         {
           id: 2,
-          clubName: "댄스 동아리",
-          category: "댄스",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "당뇨병 모임",
+          category: "당뇨",
         },
         {
           id: 3,
-          clubName: "음악 동아리",
-          category: "음악",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "치매 모임",
+          category: "치매",
         },
         {
           id: 4,
-          clubName: "연극 동아리",
-          category: "예술",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "치매 모임",
+          category: "치매",
         },
         {
           id: 5,
-          clubName: "댄스 동아리",
-          category: "댄스",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "치매 모임",
+          category: "치매",
         },
         {
           id: 6,
-          clubName: "음악 동아리",
-          category: "음악",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "치매 모임",
+          category: "치매",
         },
         {
           id: 7,
-          clubName: "연극 동아리",
-          category: "예술",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "치매 모임",
+          category: "치매",
         },
       ],
       추천: [
         {
           id: 8,
-          clubName: "등산 동아리",
-          category: "야외",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "치매 모임",
+          category: "치매",
         },
         {
           id: 9,
-          clubName: "게임 동아리",
-          category: "취미",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "당뇨병 모임",
+          category: "당뇨",
         },
         {
           id: 10,
-          clubName: "독서 동아리",
-          category: "문화",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "당뇨병 모임",
+          category: "당뇨",
         },
         {
           id: 11,
-          clubName: "사진 동아리",
-          category: "미디어",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "당뇨병 모임",
+          category: "당뇨",
         },
         {
           id: 12,
-          clubName: "게임 동아리",
-          category: "취미",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "당뇨병 모임",
+          category: "당뇨",
         },
         {
           id: 13,
-          clubName: "독서 동아리",
-          category: "문화",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "당뇨병 모임",
+          category: "당뇨",
         },
         {
           id: 14,
-          clubName: "사진 동아리",
-          category: "미디어",
-          photoName: "pizzas/spinaci.jpg",
+          clubName: "당뇨병 모임",
+          category: "당뇨",
         },
       ],
     },
     소속: [
       {
         id: 15,
-        clubName: "등산 동아리",
-        category: "야외",
-        photoName: "pizzas/spinaci.jpg",
+        clubName: "당뇨병 모임",
+        category: "당뇨",
       },
       {
         id: 16,
-        clubName: "등산 동아리",
-        category: "야외",
-        photoName: "pizzas/spinaci.jpg",
+        clubName: "치매 모임",
+        category: "치매",
       },
       {
         id: 17,
-        clubName: "등산 동아리",
-        category: "야외",
-        photoName: "pizzas/spinaci.jpg",
+        clubName: "당뇨병 모임",
+        category: "당뇨",
       },
       {
         id: 18,
-        clubName: "등산 동아리",
-        category: "야외",
-        photoName: "pizzas/spinaci.jpg",
+        clubName: "치매 모임",
+        category: "치매",
       },
       {
         id: 19,
-        clubName: "등산 동아리",
-        category: "야외",
-        photoName: "pizzas/spinaci.jpg",
+        clubName: "당뇨병 모임",
+        category: "당뇨",
       },
     ],
     교류: [
       {
         id: 20,
-        clubName: "AI 동아리",
-        category: "기술",
-        photoName: "pizzas/spinaci.jpg",
+        clubName: "치매 모임",
+        category: "치매",
       },
     ],
   };
@@ -160,7 +140,7 @@ function ClubExplore() {
       return (
         <>
           <section style={{ marginBottom: "30px" }}>
-            <h2>모집 중</h2>
+            <h3>모집 중</h3>
             <div style={{ display: "flex", alignItems: "center" }}>
               <button onClick={() => scroll(recruitRef, "left")}>◀</button>
               <div
@@ -184,7 +164,7 @@ function ClubExplore() {
           </section>
 
           <section>
-            <h2>추천</h2>
+            <h3>추천</h3>
             <div style={{ display: "flex", alignItems: "center" }}>
               <button onClick={() => scroll(recommendRef, "left")}>◀</button>
               <div
@@ -234,8 +214,8 @@ function ClubExplore() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             style={{
-              marginRight: "20px",
-              padding: "10px 5px",
+              marginRight: "3px",
+              padding: "10px 20px",
               cursor: "pointer",
               fontWeight: activeTab === tab ? "bold" : "normal",
               borderBottom: activeTab === tab ? "3px solid black" : "none",

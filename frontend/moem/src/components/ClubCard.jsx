@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function ClubCard({ photoName, clubName, category, current = 3, max = 10 }) {
+function ClubCard({ clubName, category, current = 3, max = 10 }) {
   return (
     <Link
       to={`/club/${clubName}`}
@@ -11,15 +11,12 @@ function ClubCard({ photoName, clubName, category, current = 3, max = 10 }) {
           width: "200px",
           flexShrink: 0,
           border: "1px solid #ccc",
+          borderRadius: "10px",
           padding: "10px",
-          marginRight: "10px",
+          // marginRight: "20px",
+          margin: "0 20px 20px 0",
         }}
       >
-        <img
-          src={`/${photoName}`}
-          alt={clubName}
-          style={{ width: "100%", height: "120px", objectFit: "cover" }}
-        />
         <h3>{clubName}</h3>
         <p>{category}</p>
         <p>
