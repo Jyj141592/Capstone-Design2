@@ -1,0 +1,149 @@
+.main-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+  margin-bottom: 100px;
+}
+
+.profile-section {
+  margin-bottom: 40px;
+}
+
+.profile-section h2 {
+  color: #666;
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 70px;
+  padding: 50px;
+}
+
+.profile-avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 24px;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 30px;
+}
+
+.btn-edit {
+  margin-top: 20px;
+  margin-left: 30px;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: 1px solid #999;
+  color: #777;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.profile-info p {
+  margin: 10px 0;
+  padding: 0 50px;
+  color: #555;
+}
+
+.profile-info .value {
+  color: #1976d2;
+  margin-left: 15px;
+}
+
+.btn-withdraw {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 6px 12px;
+  margin: 20px;
+  font-size: 12px;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.club-section {
+  margin-bottom: 30px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-header h2 {
+  color: #666;
+  font-size: 20px;
+  margin: 0;
+}
+
+.link-more {
+  font-size: 14px;
+  color: #666;
+  text-decoration: none;
+  margin: 0;
+}
+
+.person-section {
+  margin-bottom: 80px;
+}
+
+.person-section h2 {
+  color: #666;
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.person-list {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.person-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.person-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.person-name {
+  margin-top: 15px;
+  color: #555;
+}
+
+.link-more {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #666;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 30px 0 20px;
+}
