@@ -1,30 +1,22 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import "./ClubCard.css";
 
-function ClubCard({ clubName, category, current = 3, max = 10 }) {
+export default function ClubCard({ club }) {
   return (
-    <Link
-      to={`/club/${clubName}`}
-      style={{ textDecoration: "none", color: "inherit" }}
-    >
-      <div
-        style={{
-          width: "200px",
-          flexShrink: 0,
-          border: "1px solid #ccc",
-          borderRadius: "10px",
-          padding: "10px",
-          // marginRight: "20px",
-          margin: "0 20px 20px 0",
-        }}
-      >
-        <h3>{clubName}</h3>
-        <p>{category}</p>
-        <p>
-          {current} / {max} 명
+    <div className="club-card">
+      <img
+        src={club.imageUrl || "/images/club_default.jpg"}
+        alt={club.name}
+        className="club-card-img"
+      />
+      <div className="club-card-content">
+        <p className="club-category">#{club.category}</p>
+        <h3 className="club-name">{club.name}</h3>
+        <p className="club-description">{club.description}</p>
+        <p className="club-count">
+          {club.current}/{club.max}명
         </p>
       </div>
-    </Link>
+    </div>
   );
 }
-
-export default ClubCard;

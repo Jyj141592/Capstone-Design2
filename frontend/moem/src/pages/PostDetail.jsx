@@ -7,13 +7,10 @@ function PostDetail() {
   const post = isMock
     ? {
         title: "게시글 제목",
-        author: "가이름",
         content: `게시글 본문입니다.
-        게시글 본문
-        게시글 본문
-        게시글 본문
-        게시글 본문
-        게시글 본문`,
+  줄바꿈 줄바꿈 줄바꿈 줄바꿈
+  줄바꿈
+  수정 중`,
       }
     : null;
 
@@ -21,13 +18,7 @@ function PostDetail() {
 
   return (
     <div style={{ padding: "24px" }}>
-      <h1 style={{ fontSize: "24px", marginBottom: "16px" }}>
-        {post.title}
-
-        <span style={{ fontSize: "13px", marginLeft: "20px", color: "#999" }}>
-          by {post.author}
-        </span>
-      </h1>
+      <h1 style={{ fontSize: "24px", marginBottom: "16px" }}>{post.title}</h1>
 
       <section style={{ marginBottom: "32px" }}>
         <p
