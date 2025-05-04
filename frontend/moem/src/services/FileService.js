@@ -1,0 +1,18 @@
+import { apiClient } from "../api/ApiClient";
+import { FILE_API } from "../api/FileApi";
+
+export async function fetchImageUrl(clubId, fileName){
+    try {
+        const response = await apiClient.get(FILE_API.DOWNLOAD_FILE(clubId, fileName), {
+            responseType: 'blob'
+        });
+
+        const contentType = response.headers['content-type'] || 'image/png';
+        const blob = new Blob([response.data], { type: contentType });
+        const url = URL.createObjectURL(blob);
+        return url;
+    } catch (error) {
+        console.error('이미지 다운로드 실패:', error);
+        return null;
+    }
+}

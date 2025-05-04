@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useState, useCallback, useEffect, useRef} from "react";
 import { apiClient } from "../api/ApiClient";
 import { AUTH_API } from "../api/AuthApi";
 
@@ -10,6 +10,24 @@ function AuthProvider({children}){
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [username, setUsername] = useState(null);
     const [token, setToken] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const logout = useCallback(() => {
+        setAuthenticated(false);
+        setUsername(null);
+        setToken(null);
+        localStorage.setItem("token", null);
+    }, []);
+
+    useEffect(()=>{
+        const savedToken = JSON.parse(localStorage.getItem("token"));
+        if(savedToken){
+            const savedUsername = localStorage.getItem("username");
+            setAuthenticated(true);
+            setToken(savedToken);
+            setUsername(savedUsername);
+        }
+        setIsLoading(false);
+    }, []);
 
     async function login(username, password){
         try{
@@ -19,26 +37,8 @@ function AuthProvider({children}){
                 setAuthenticated(true);
                 setUsername(username);
                 setToken(jwt);
-
-                apiClient.interceptors.request.use(
-                    (request)=>{
-                        if(isAuthenticated){
-                            request.headers.Authorization = `Bearer ${token.accessToken}`;
-                        }
-                        return request;
-                    },
-                    (error) => Promise.reject(error)
-                );
-                apiClient.interceptors.response.use(
-                    (response) => response,
-                    (error) => {
-                        if(error.response?.status === 401 && isAuthenticated){
-                            logout();
-
-                        }
-                        return Promise.reject(error);
-                    }
-                );
+                localStorage.setItem("token", JSON.stringify(jwt));
+                localStorage.setItem("username", username);
                 return true;
             }
             else{
@@ -51,17 +51,12 @@ function AuthProvider({children}){
             return false;
         }
     }
-    function logout(){
-        setAuthenticated(false);
-        setUsername(null);
-        setToken(null);
-    }
     async function refresh(){
 
     }
 
     return (
-        <AuthContext.Provider value ={{isAuthenticated, login, logout, username}}>
+        <AuthContext.Provider value ={{isAuthenticated, login, logout, username, isLoading}}>
             {children}
         </AuthContext.Provider>
     )

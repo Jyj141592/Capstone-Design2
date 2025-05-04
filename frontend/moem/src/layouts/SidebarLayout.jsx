@@ -1,10 +1,9 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import "./index.css";
 
 function SidebarLayout() {
   const location = useLocation();
   const menu = [
-    { to: "/explore", label: "모임" },
+    { to: "/explore", label: "동아리" },
     { to: "/account", label: "계정" },
   ];
 
@@ -14,7 +13,7 @@ function SidebarLayout() {
         style={{
           width: "280px",
           background: "#eee",
-          padding: "40px",
+          padding: "20px",
           boxSizing: "border-box",
           height: "100vh",
           display: "flex",
@@ -30,10 +29,10 @@ function SidebarLayout() {
                 height: "80px",
                 borderRadius: "50%",
                 background: "#ccc",
-                margin: "50px auto 20px auto",
+                margin: "0 auto",
               }}
             ></div>
-            <h3 style={{ marginBottom: "40px" }}>Name</h3>
+            <h3>Name</h3>
           </div>
           <nav>
             <ul style={{ listStyle: "none", padding: 0 }}>
@@ -44,8 +43,8 @@ function SidebarLayout() {
                     style={{
                       background:
                         location.pathname === to ? "#fbe9a9" : "transparent",
-                      padding: "10px 20px",
-                      borderRadius: "500px",
+                      padding: "5px 10px",
+                      borderRadius: "5px",
                       display: "inline-block",
                       textDecoration: "none",
                       color: "#333",
@@ -58,23 +57,20 @@ function SidebarLayout() {
             </ul>
           </nav>
         </div>
-        <Link
-          to="/club/create"
+        <button
           style={{
             marginTop: "20px",
-            width: "85%",
+            width: "100%",
             backgroundColor: "#444",
             color: "#fff",
             border: "none",
             padding: "10px 16px",
             borderRadius: "4px",
-            textAlign: "center",
-            textDecoration: "none",
-            display: "block",
+            cursor: "pointer",
           }}
         >
-          모임 생성
-        </Link>
+          동아리 생성
+        </button>
       </div>
       <div style={{ flex: 1, padding: "20px", overflowY: "auto" }}>
         <Outlet />
