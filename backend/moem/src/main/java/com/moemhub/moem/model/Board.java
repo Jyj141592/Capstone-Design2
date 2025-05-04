@@ -6,8 +6,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
+@Table(name = "boards")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,4 +23,7 @@ public class Board {
     @JsonIgnore
     @ManyToOne
     private Club club;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Post> posts;
 }

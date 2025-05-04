@@ -1,6 +1,7 @@
 package com.moemhub.moem.service;
 
 import com.moemhub.moem.model.Post;
+
 import java.util.List;
 
 public interface PostService {

@@ -19,7 +19,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(Post post) {
-        // Save and return new post
         return postRepository.save(post);
     }
 
@@ -27,7 +26,7 @@ public class PostServiceImpl implements PostService {
     public Post getPost(Long id) {
         // Find by ID or throw if not found
         return postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new RuntimeException("Post not found: " + id));
     }
 
     @Override
@@ -37,13 +36,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(Long id, Post updated) {
-        // Fetch existing post
+    public Post updatePost(Long id, Post postData) {
         Post post = getPost(id);
-        // Apply updates
-        post.setTitle(updated.getTitle());
-        post.setContent(updated.getContent());
-        // Save and return
+        post.setTitle(postData.getTitle());
+        post.setContent(postData.getContent());
+        post.setSchedule(postData.getSchedule());
+        post.setImages(postData.getImages());
         return postRepository.save(post);
     }
 

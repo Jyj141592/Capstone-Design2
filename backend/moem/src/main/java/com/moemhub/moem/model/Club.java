@@ -19,12 +19,12 @@ import java.util.List;
 @Builder
 public class Club {
 
-    // Primary key (auto-increment)
+    // Primary key
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Club name (required)
+    // Club name
     @Column(nullable = false)
     private String name;
 
