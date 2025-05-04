@@ -10,6 +10,7 @@ function AuthProvider({children}){
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [username, setUsername] = useState(null);
     const [token, setToken] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const logout = useCallback(() => {
         setAuthenticated(false);
         setUsername(null);
@@ -25,6 +26,7 @@ function AuthProvider({children}){
             setToken(savedToken);
             setUsername(savedUsername);
         }
+        setIsLoading(false);
     }, []);
 
     async function login(username, password){
@@ -54,7 +56,7 @@ function AuthProvider({children}){
     }
 
     return (
-        <AuthContext.Provider value ={{isAuthenticated, login, logout, username}}>
+        <AuthContext.Provider value ={{isAuthenticated, login, logout, username, isLoading}}>
             {children}
         </AuthContext.Provider>
     )
