@@ -1,6 +1,7 @@
 package com.moemhub.moem.controller;
 
 import com.moemhub.moem.dto.PostDto;
+import com.moemhub.moem.dto.PostSummaryDto;
 import com.moemhub.moem.model.Board;
 import com.moemhub.moem.model.Post;
 import com.moemhub.moem.model.Account;
@@ -34,6 +35,7 @@ public class PostController {
     // Create new post
     @PostMapping
     public ResponseEntity<PostDto.Response> create(
+            @PathVariable Long clubId,
             @PathVariable Long boardId,
             @Valid @RequestBody PostDto.CreateRequest req) {
 
@@ -52,29 +54,25 @@ public class PostController {
                 .build();
 
         Post saved = postService.createPost(post);
-        return new ResponseEntity<>(toResponse(saved), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(saved));
     }
 
     // Get post by its ID
     @GetMapping("/{postId}")
     public ResponseEntity<PostDto.Response> getById(
+            @PathVariable Long clubId,
+            @PathVariable Long boardId,
             @PathVariable Long postId) {
 
-        Post post = postService.getPost(postId);
+        Post post = postService.getPostByClubAndBoard(clubId, boardId, postId);
         return ResponseEntity.ok(toResponse(post));
-    }
-
-    // Get all posts
-    @GetMapping
-    public ResponseEntity<List<PostDto.Response>> getAll() {
-        List<PostDto.Response> list = postService.getAllPosts()
-                .stream().map(this::toResponse).collect(Collectors.toList());
-        return ResponseEntity.ok(list);
     }
 
     // Update existing post
     @PutMapping("/{postId}")
     public ResponseEntity<PostDto.Response> update(
+            @PathVariable Long clubId,
+            @PathVariable Long boardId,
             @PathVariable Long postId,
             @Valid @RequestBody PostDto.UpdateRequest req) {
 
@@ -89,11 +87,40 @@ public class PostController {
         return ResponseEntity.ok(toResponse(updated));
     }
 
+
     // Delete post by its ID
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> delete(@PathVariable Long postId) {
+    public ResponseEntity<Void> delete(
+            @PathVariable Long clubId,
+            @PathVariable Long boardId,
+            @PathVariable Long postId) {
+
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
+    }
+
+    // Get all posts by board ID
+    @GetMapping
+    public ResponseEntity<List<PostDto.Response>> getPostsByBoardId(
+            @PathVariable Long clubId,
+            @PathVariable Long boardId) {
+
+        List<Post> posts = postService.getPostsByBoardId(boardId);
+        List<PostDto.Response> dtoList = posts.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
+    }
+
+
+    // Get Post summary by board ID
+    @GetMapping("/summary")
+    public ResponseEntity<List<PostSummaryDto>> getPostSummaries(
+            @PathVariable Long clubId,
+            @PathVariable Long boardId) {
+
+        List<PostSummaryDto> summaries = postService.getPostSummaryByBoardId(boardId);
+        return ResponseEntity.ok(summaries);
     }
 
     private PostDto.Response toResponse(Post post) {
@@ -104,6 +131,7 @@ public class PostController {
         r.setCreatedAt(post.getCreatedAt());
         r.setSchedule(post.getSchedule());
         r.setImages(post.getImages());
+        r.setThumbnail(post.getThumbnail());
         r.setAuthorId(post.getAuthor().getId());
         r.setBoardId(post.getBoard().getId());
         return r;

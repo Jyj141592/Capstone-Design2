@@ -37,6 +37,9 @@ public class Post {
     @Column(name = "image_url")
     private List<String> images = new ArrayList<>();
 
+    @Column(name = "thumbnail_url")
+    private String thumbnail;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Account author;

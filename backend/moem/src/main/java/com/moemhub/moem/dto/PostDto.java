@@ -36,6 +36,7 @@ public class PostDto {
         private LocalDateTime createdAt;
         private String schedule;
         private List<String> images;
+        private String thumbnail;
         private Long authorId;
         private Long boardId;
     }

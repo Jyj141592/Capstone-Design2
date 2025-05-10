@@ -1,5 +1,7 @@
 package com.moemhub.moem.service;
 
+import com.moemhub.moem.dto.ClubInfoDto;
+import com.moemhub.moem.model.Account;
 import com.moemhub.moem.model.Club;
 import com.moemhub.moem.model.ClubJoinRequest;
 import com.moemhub.moem.model.ClubMember;
@@ -9,13 +11,16 @@ import java.util.List;
 public interface ClubService {
 
     // Create new club
-    Club createClub(Club club);
+    Club createClub(Club club, Account owner);
 
     // Update existing club information
-    Club updateClub(Long id, Club club);
+    Club updateClub(Long clubId, Club club);
 
     // Delete club by its ID
-    void deleteClub(Long id);
+    void deleteClub(Long clubId);
+
+    // Retrieve club by its ID
+    Club getClubById(Long clubId);
 
     // Retrieve all members of given club
     List<ClubMember> getClubMembers(Long clubId);
@@ -38,9 +43,22 @@ public interface ClubService {
     // Retrieve join request by request ID
     ClubJoinRequest getJoinRequest(Long requestId);
 
+    // Request to join a club instead of a ward
+    ClubJoinRequest requestToJoinInstead(Long clubId, Long wardId, Long guardianId, String message);
+
     // Approve join request
     ClubJoinRequest approveJoinRequest(Long requestId, String responseMessage);
 
     // Reject join request and update response message
     ClubJoinRequest rejectJoinRequest(Long requestId, String responseMessage);
+
+    // Recommend clubs based on interests
+    List<ClubInfoDto> recommendClubsByInterests(Long accountId);
+
+    // Recommend clubs based on region
+    List<ClubInfoDto> recommendClubsByRegion(Long accountId);
+
+    // Search for clubs by name, topics, and region
+    List<ClubInfoDto> searchClubs(String name, List<String> topics, String region);
+
 }
