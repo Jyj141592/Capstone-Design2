@@ -45,7 +45,7 @@ public class SecurityConfig {
             }))
             .authorizeHttpRequests(auth->
                     auth.requestMatchers("/login", "/refresh", "/register", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .anyRequest().authenticated()
+                            .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), BasicAuthenticationFilter.class)
             .formLogin(AbstractHttpConfigurer::disable)

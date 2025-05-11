@@ -15,8 +15,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,15 +40,36 @@ public class AuthService {
     public void logout() {
 
     }
+
     public String refresh(String refreshToken) {
         return jwtTokenProvider.generateByRefreshToken(refreshToken);
     }
+
     public boolean register(RegisterDto registerDto) {
         Optional<Account> account = accountRepository.findByUsername(registerDto.getUsername());
         if(account.isPresent()) return false;
         try {
             String hashPwd = passwordEncoder.encode(registerDto.getPassword());
-            Account newAccount = new Account(null, registerDto.getUsername(), hashPwd);
+            Account newAccount = Account.builder()
+                    .username(registerDto.getUsername())
+                    .password(hashPwd)
+                    .name(registerDto.getName())
+                    .profileImage(registerDto.getProfileImage())
+                    .age(registerDto.getAge())
+                    .gender(registerDto.getGender())
+                    .region(registerDto.getRegion())
+                    .interests(registerDto.getInterests() != null
+                            ? registerDto.getInterests()
+                            : List.of())
+                    // ──────────────────────────────────────────────────
+                    .build();
+            if (registerDto.getGuardianIds() != null) {
+                for (Long gid : registerDto.getGuardianIds()) {
+                    Account guardian = accountRepository.findById(gid)
+                            .orElseThrow(() -> new RuntimeException("Guardian not found: " + gid));
+                    newAccount.getGuardians().add(guardian);
+                }
+            }
             Account savedAccount = accountRepository.save(newAccount);
             return savedAccount.getId() > 0;
         }

@@ -4,13 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
+@Table(name = "boards")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +25,7 @@ public class Board {
     @JsonIgnore
     @ManyToOne
     private Club club;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Post> posts;
 }
