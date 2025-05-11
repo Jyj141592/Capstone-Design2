@@ -8,6 +8,9 @@ import MyPage from "./pages/MyPage";
 import ClubLayout from "./layouts/ClubLayout";
 import ClubMain from "./pages/ClubMain";
 import ExploreClub from "./pages/ExploreClub";
+import ClubInfo from "./pages/ClubInfo";
+import ClubRegister from "./pages/ClubRegister";
+import ClubCreate from "./pages/ClubCreate";
 
 function App() {
   return (
@@ -21,8 +24,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="/club/" element={<ClubLayout/>}>
-            <Route path=":clubId" element={<ClubMain/>}/>
+          <Route path="/exploreclub" element={<ExploreClub />} />
+          <Route path="/club/register" element={<ClubRegister />} />
+          <Route path="/club/:clubId/info" element={<ClubInfo />} />
+          <Route path="/club/create" element={<ClubCreate />} />
+          <Route path="/club/" element={<ClubLayout />}>
+            <Route path=":clubId" element={<ClubMain />} />
           </Route>
           {/* 추가 페이지들은 여기에 계속 나열 */}
         </Routes>

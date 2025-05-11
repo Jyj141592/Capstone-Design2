@@ -1,4 +1,4 @@
-.site-header {
+.siteHeader {
   background: #fff;
   /* border-bottom: 1px solid #eee; */
   padding: 0 130px;
@@ -6,7 +6,7 @@
   top: 0;
   z-index: 1000;
 }
-.header-inner {
+.headerInner {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -20,8 +20,8 @@
   color: #333;
   text-decoration: none;
 }
-.nav-links a,
-.nav-links button {
+.navLinks a,
+.navLinks button {
   margin-left: 16px;
   font-size: 14px;
   color: #333;

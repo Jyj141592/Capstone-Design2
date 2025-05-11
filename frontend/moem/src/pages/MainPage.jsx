@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { apiClient } from "../api/ApiClient";
 import ClubCardList from "../components/ClubCardList";
-import "./MainPage.css";
 import { mockMyClubs } from "../mock/data";
+import styles from "./MainPage.module.css";
 
 export default function MainPage() {
   const authContext = useAuth();
@@ -18,13 +19,19 @@ export default function MainPage() {
   }, []);
 
   return (
-    <div className="main-page">
-      <img src="/images/banner.jpg" alt="Main Banner" className="main-banner" />
+    <div className={styles.mainPage}>
+      <img
+        src="/images/banner.jpg"
+        alt="Main Banner"
+        className={styles.mainBanner}
+      />
 
-      <section className="club-section">
-        <div className="section-header">
+      <section className={styles.clubSection}>
+        <div className={styles.sectionHeader}>
           <h2>{authContext.isAuthenticated ? "내 모임" : "추천 모임"}</h2>
-          <a href="/explore">모두보기 →</a>
+          <Link to="/exploreclub" className={styles.linkMore}>
+            모두보기 →
+          </Link>
         </div>
         <ClubCardList clubs={clubs} />
       </section>

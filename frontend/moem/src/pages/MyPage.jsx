@@ -3,7 +3,7 @@ import { useAuth } from "../auth/AuthContext";
 import ClubCardList from "../components/ClubCardList";
 import ClubManageModal from "../components/ClubManageModal";
 import ManageModal from "../components/ManageModal";
-import "./MyPage.css";
+import styles from "./MyPage.module.css";
 import {
   mockProfile,
   mockMyClubs,
@@ -42,7 +42,6 @@ export default function MyPage() {
     setTempGuardians(
       mockManageGuardians.filter((g) => guardians.some((u) => u.id === g.id))
     );
-
     setShowGuardianModal(true);
   };
 
@@ -50,7 +49,6 @@ export default function MyPage() {
     setTempProteges(
       mockManageProteges.filter((p) => proteges.some((u) => u.id === p.id))
     );
-
     setShowProtegeModal(true);
   };
 
@@ -71,57 +69,59 @@ export default function MyPage() {
   };
 
   return (
-    <div className="main-page">
-      {/* 프로필 섹션 */}
-      <section className="profile-section">
+    <div className={styles.mainPage}>
+      <section className={styles.profileSection}>
         <h2>내 정보</h2>
         {profile && (
-          <div className="profile-card">
-            <div className="profile-avatar-wrapper">
+          <div className={styles.profileCard}>
+            <div className={styles.profileAvatarWrapper}>
               <img
                 src={profile.avatarUrl}
                 alt="avatar"
-                className="profile-avatar"
+                className={styles.profileAvatar}
               />
-              <button className="btn-edit">프로필 변경</button>
+              <button className={styles.btnEdit}>프로필 변경</button>
             </div>
-            <div className="profile-info">
+            <div className={styles.profileInfo}>
               <p>
                 <strong>이름</strong>{" "}
-                <span className="value">{profile.name}</span>
+                <span className={styles.value}>{profile.name}</span>
               </p>
               <p>
                 <strong>나이</strong>{" "}
-                <span className="value">{profile.age}</span>
+                <span className={styles.value}>{profile.age}</span>
               </p>
               <p>
                 <strong>성별</strong>{" "}
-                <span className="value">{profile.gender}</span>
+                <span className={styles.value}>{profile.gender}</span>
               </p>
               <p>
                 <strong>활동 지역</strong>{" "}
-                <span className="value">{profile.region}</span>
+                <span className={styles.value}>{profile.region}</span>
               </p>
               <p>
                 <strong>관심 주제</strong>{" "}
-                <span className="value">{profile.interests.join(", ")}</span>
+                <span className={styles.value}>
+                  {profile.interests.join(", ")}
+                </span>
               </p>
             </div>
-            <button className="btn-withdraw">회원 탈퇴</button>
+            <button className={styles.btnWithdraw}>회원 탈퇴</button>
           </div>
         )}
       </section>
 
-      {/* 내 모임 섹션 */}
-      <section className="club-section">
-        <div className="section-header">
+      <section className={styles.clubSection}>
+        <div className={styles.sectionHeader}>
           <h2>내 모임</h2>
-          <button className="link-more" onClick={() => setShowClubModal(true)}>
+          <button
+            className={styles.linkMore}
+            onClick={() => setShowClubModal(true)}
+          >
             모두보기 →
           </button>
         </div>
         <ClubCardList clubs={myClubs} />
-        {/* Club 전용 모달 */}
         <ClubManageModal
           visible={showClubModal}
           onClose={() => setShowClubModal(false)}
@@ -129,17 +129,23 @@ export default function MyPage() {
         />
       </section>
 
-      {/* 보호자 섹션 */}
-      <section className="person-section">
+      <section className={styles.personSection}>
         <h2>보호자</h2>
-        <div className="person-list">
+        <div className={styles.personList}>
           {guardians.map((u) => (
-            <div key={u.id} className="person-card">
-              <img src={u.avatarUrl} alt={u.name} className="person-avatar" />
-              <span className="person-name">{u.name}</span>
+            <div key={u.id} className={styles.personCard}>
+              <img
+                src={u.avatarUrl}
+                alt={u.name}
+                className={styles.personAvatar}
+              />
+              <span className={styles.personName}>{u.name}</span>
             </div>
           ))}
-          <button className="link-more" onClick={() => openGuardianModal(true)}>
+          <button
+            className={styles.linkMore}
+            onClick={() => openGuardianModal(true)}
+          >
             모두보기 →
           </button>
         </div>
@@ -154,17 +160,23 @@ export default function MyPage() {
         />
       </section>
 
-      {/* 피보호자 섹션 */}
-      <section className="person-section">
+      <section className={styles.personSection}>
         <h2>피보호자</h2>
-        <div className="person-list">
+        <div className={styles.personList}>
           {proteges.map((u) => (
-            <div key={u.id} className="person-card">
-              <img src={u.avatarUrl} alt={u.name} className="person-avatar" />
-              <span className="person-name">{u.name}</span>
+            <div key={u.id} className={styles.personCard}>
+              <img
+                src={u.avatarUrl}
+                alt={u.name}
+                className={styles.personAvatar}
+              />
+              <span className={styles.personName}>{u.name}</span>
             </div>
           ))}
-          <button className="link-more" onClick={() => openProtegeModal(true)}>
+          <button
+            className={styles.linkMore}
+            onClick={() => openProtegeModal(true)}
+          >
             모두보기 →
           </button>
         </div>

@@ -1,38 +1,40 @@
 import React from "react";
-import "./ClubManageModal.css";
+import styles from "./ClubManageModal.module.css";
 
 export default function ClubManageModal({ visible, onClose, data }) {
   if (!visible) return null;
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
           <h3>모임 관리</h3>
-          <button className="modal-close" onClick={onClose}>
+          <button className={styles.modalClose} onClick={onClose}>
             확인
           </button>
         </div>
-        <div className="modal-body">
-          <div className="modal-section">
-            <div className="modal-title">내 모임</div>
+        <div className={styles.modalBody}>
+          <div className={styles.modalSection}>
+            <div className={styles.modalTitle}>내 모임</div>
             {data.my.map((name) => (
-              <div key={name} className="modal-item">
+              <div key={name} className={styles.modalItem}>
                 {name}
               </div>
             ))}
           </div>
-          <div className="modal-section">
-            <div className="modal-title pending">대기</div>
+          <div className={styles.modalSection}>
+            <div className={`${styles.modalTitle} ${styles.pending}`}>대기</div>
             {data.pending.map((name) => (
-              <div key={name} className="modal-item">
+              <div key={name} className={styles.modalItem}>
                 {name}
               </div>
             ))}
           </div>
-          <div className="modal-section">
-            <div className="modal-title rejected">거절</div>
+          <div className={styles.modalSection}>
+            <div className={`${styles.modalTitle} ${styles.rejected}`}>
+              거절
+            </div>
             {data.rejected.map((name) => (
-              <div key={name} className="modal-item">
+              <div key={name} className={styles.modalItem}>
                 {name}
               </div>
             ))}

@@ -1,5 +1,5 @@
 import React from "react";
-import "./ManageModal.css";
+import styles from "./ManageModal.module.css";
 
 export default function ManageModal({
   visible,
@@ -11,41 +11,42 @@ export default function ManageModal({
   onConfirm,
 }) {
   if (!visible) return null;
+
   const handleConfirm = () => {
     if (onConfirm) onConfirm();
     onClose();
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
           <h3>{title}</h3>
-          <div className="modal-actions">
-            <button className="btn-add" onClick={onAdd}>
+          <div className={styles.modalActions}>
+            <button className={styles.btnAdd} onClick={onAdd}>
               추가
             </button>
-            <button className="modal-close" onClick={handleConfirm}>
+            <button className={styles.modalClose} onClick={handleConfirm}>
               확인
             </button>
           </div>
         </div>
-        <div className="modal-body">
-          <div className="manage-grid">
+        <div className={styles.modalBody}>
+          <div className={styles.manageGrid}>
             {items.map((item) => (
-              <div key={item.id} className="manage-item">
+              <div key={item.id} className={styles.manageItem}>
                 <img
                   src={item.avatarUrl}
                   alt={item.name}
-                  className="manage-avatar"
+                  className={styles.manageAvatar}
                 />
                 <button
-                  className="btn-remove"
+                  className={styles.btnRemove}
                   onClick={() => onRemove(item.id)}
                 >
                   X
                 </button>
-                <span className="manage-name">{item.name}</span>
+                <span className={styles.manageName}>{item.name}</span>
               </div>
             ))}
           </div>
