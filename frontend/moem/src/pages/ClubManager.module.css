@@ -1,0 +1,108 @@
+.container {
+    padding: 20px;
+    font-family: sans-serif;
+  }
+  
+  .section {
+    margin-bottom: 40px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .subtitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 20px 0 10px;
+  }
+  
+  .fieldGroup {
+    margin-bottom: 15px;
+  }
+  
+  .label {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .profileImg {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .userCard {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 5px 10px;
+    background-color: #fafafa;
+  }
+  
+  .userImg {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .button {
+    margin-top: 10px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background-color: white;
+    padding: 20px;
+    width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
