@@ -35,9 +35,9 @@ public class Account {
     @ElementCollection
     @CollectionTable(name = "account_interests", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "interest")
+    @Builder.Default
     private List<String> interests = new ArrayList<>();
 
-    // 9) 보호자 관계 (guardian → this)
     @ManyToMany
     @JoinTable(
             name = "account_guardians",
@@ -45,11 +45,12 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "guardian_id")
     )
     @ToString.Exclude @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<Account> guardians = new HashSet<>();
 
-    // 9) 피보호자 관계 (this → ward)
     @ManyToMany(mappedBy = "guardians")
     @ToString.Exclude @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<Account> wards = new HashSet<>();
 
 }

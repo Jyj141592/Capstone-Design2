@@ -8,10 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ClubCreateDto {
-    @NotBlank(message = "클럽 이름을 입력해주세요")
+    @NotBlank(message = "Enter Club Name")
     private String name;
     private String description;
-    @NotBlank(message = "활동 주제를 입력해주세요")
+    @NotBlank(message = "Enter Club Topic")
     private String topic;
     private String profileImageName;
     private String region;

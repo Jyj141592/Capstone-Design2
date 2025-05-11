@@ -87,7 +87,6 @@ public class PostController {
         return ResponseEntity.ok(toResponse(updated));
     }
 
-
     // Delete post by its ID
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> delete(

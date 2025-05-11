@@ -38,15 +38,15 @@ public class ClubServiceImpl implements ClubService {
 
         // Create and associate Notice Board
         Board noticeBoard = Board.builder()
-                .name("공지 게시판")
-                .description("공지사항을 확인하는 게시판입니다.")
+                .name("Notice Board")
+                .description("Board for club announcements.")
                 .club(club)
                 .build();
 
         // Create and associate Activity Board
         Board activityBoard = Board.builder()
-                .name("활동 내역 게시판")
-                .description("활동 내역을 공유하는 게시판입니다.")
+                .name("Activity Board")
+                .description("Board for club activities.")
                 .club(club)
                 .build();
 

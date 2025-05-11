@@ -31,7 +31,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post getPostByID(Long id) {
-        // Find by ID or throw if not found
         return postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found: " + id));
     }
@@ -54,7 +53,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(Long id) {
-        // Delete by ID
         postRepository.deleteById(id);
     }
 
@@ -93,5 +91,4 @@ public class PostServiceImpl implements PostService {
 
         return post;
     }
-
 }

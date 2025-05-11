@@ -86,6 +86,7 @@ public class AccountServiceImpl implements AccountService {
 
         ward.getGuardians().add(guardian);
         accountRepository.save(ward);
+        guardian.getWards().add(ward);
     }
 
     @Override

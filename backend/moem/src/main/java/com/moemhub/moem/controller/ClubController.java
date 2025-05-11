@@ -65,7 +65,6 @@ public class ClubController {
 
         Club created = clubService.createClub(club, owner);
 
-        // 4) 엔티티 → DTO 변환
         ClubInfoDto resp = ClubInfoDto.builder()
                 .id(created.getId())
                 .name(created.getName())
@@ -85,7 +84,6 @@ public class ClubController {
             @PathVariable Long clubId,
             @Valid @RequestBody ClubUpdateDto req) {
 
-        // DTO → 엔티티로 변경할 필드만 세팅
         Club toUpdate = Club.builder()
                 .name(req.getName())
                 .description(req.getDescription())
@@ -271,16 +269,6 @@ public class ClubController {
 
         List<BoardDto> boards = boardService.listBoard(clubId);
         return ResponseEntity.ok(boards);
-    }
-
-    // Endpoint for retrieving posts in summary
-    @GetMapping("/{clubId}/boards/{boardId}/posts/summary")
-    public ResponseEntity<List<PostSummaryDto>> listPostSummaries(
-            @PathVariable Long clubId,
-            @PathVariable Long boardId) {
-
-        List<PostSummaryDto> summaries = postService.getPostSummaryByBoardId(boardId);
-        return ResponseEntity.ok(summaries);
     }
 
     // Convert ClubJoinRequest entity to DTO response form
