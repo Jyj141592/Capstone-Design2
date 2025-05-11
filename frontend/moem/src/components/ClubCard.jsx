@@ -1,19 +1,26 @@
 import React from "react";
-import "./ClubCard.css";
+import { useNavigate } from "react-router-dom";
+import styles from "./ClubCard.module.css";
 
 export default function ClubCard({ club }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/club/${club.id}/info`);
+  };
+
   return (
-    <div className="club-card">
+    <div className={styles.clubCard} onClick={handleClick}>
       <img
         src={club.imageUrl || "/images/club_default.jpg"}
         alt={club.name}
-        className="club-card-img"
+        className={styles.clubCardImg}
       />
-      <div className="club-card-content">
-        <p className="club-category">#{club.category}</p>
-        <h3 className="club-name">{club.name}</h3>
-        <p className="club-description">{club.description}</p>
-        <p className="club-count">
+      <div className={styles.clubCardContent}>
+        <p className={styles.clubCategory}>#{club.category}</p>
+        <h3 className={styles.clubName}>{club.name}</h3>
+        <p className={styles.clubDescription}>{club.description}</p>
+        <p className={styles.clubCount}>
           {club.current}/{club.max}명
         </p>
       </div>

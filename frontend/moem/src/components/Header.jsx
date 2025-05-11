@@ -1,19 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import "./Header.css";
+import styles from "./Header.module.css";
 
 export default function Header() {
   const authContext = useAuth();
 
   return (
-    <header className="site-header">
-      <div className="header-inner">
-        <Link to="/" className="logo">
+    <header className={styles.siteHeader}>
+      <div className={styles.headerInner}>
+        <Link to="/" className={styles.logo}>
           MOEM
         </Link>
 
-        <nav className="nav-links">
+        <nav className={styles.navLinks}>
           {authContext.isAuthenticated ? (
             <>
               <Link to="/mypage">내 정보</Link>
