@@ -35,11 +35,11 @@ function ClubBoard(){
     function handlePageClick(p){
         if(p == page) return;
         else{
-            navigate(`/${clubId}/${boardId}?page=${p}`);
+            navigate(`/club/${clubId}/${boardId}?page=${p}`);
         }
     }
     function onWrite(){
-        navigate(`/${clubId}/${boardId}/write`);
+        navigate(`/club/${clubId}/${boardId}/write`);
     }
 
     const pageNumbers = [];
@@ -63,7 +63,7 @@ function ClubBoard(){
                 {
                     posts.map(post=>(
                         <li key={post.id} className={styles.postItem}>
-                            <Link to ={`/${clubId}/${boardId}/${post.id}`} className={styles.postLink}>{post.title}</Link> 
+                            <Link to ={`/club/${clubId}/${boardId}/${post.id}`} className={styles.postLink}>{post.title}</Link> 
                         </li>
                     ))
                 }

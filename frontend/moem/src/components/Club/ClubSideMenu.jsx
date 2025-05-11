@@ -37,7 +37,7 @@ function ClubSideMenu() {
                     {
                         boardList.map(board => (
                             <li key={board.id} className={styles.boardItem}>
-                                <Link to={`/${clubId}/${board.id}`}>{board.title}</Link>
+                                <Link to={`/club/${clubId}/${board.id}`}>{board.title}</Link>
                             </li>
                         ))
                     }

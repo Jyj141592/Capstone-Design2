@@ -21,7 +21,7 @@ function PostCard({clubId, boardId, post}){
 
     return (
         <div>
-            <Link to={`/${clubId}/${boardId}/${post.id}`} className={styles.card}>
+            <Link to={`/club/${clubId}/${boardId}/${post.id}`} className={styles.card}>
                 <img src={imgUrl} alt="Thumbnail" className={styles.thumbnail}/>
                 <div className={styles.title}>
                     {post.title}

@@ -23,13 +23,13 @@ function ClubMain(){
             <div className={styles.section}>
                 <div className={styles.headerRow}>
                     <h2 className={styles.title}>공지</h2>
-                    <Link to={`/${clubId}/${noticeBoard}`} className={styles.more}>더보기 {'>'}</Link>
+                    <Link to={`/club/${clubId}/${noticeBoard}`} className={styles.more}>더보기 {'>'}</Link>
                 </div>
                 <ul className={styles.list}>
                     {
                         notices.map(notice => (
                             <li key={notice.id} className={styles.listItem}>
-                                <Link to={`/${clubId}/${noticeBoard}/${notice.id}`} className={styles.link}>{notice.title}</Link>
+                                <Link to={`/club/${clubId}/${noticeBoard}/${notice.id}`} className={styles.link}>{notice.title}</Link>
                             </li>
                         ))
                     }
@@ -38,7 +38,7 @@ function ClubMain(){
             <div className={styles.section}>
                 <div className={styles.headerRow}>
                     <h2 className={styles.title}>활동 내역</h2>
-                    <Link to={`/${clubId}/${activityBoard}`} className={styles.more}>더보기 {'>'}</Link>
+                    <Link to={`/club/${clubId}/${activityBoard}`} className={styles.more}>더보기 {'>'}</Link>
                 </div>
                 <ul className={styles.cardList}>
                     {
