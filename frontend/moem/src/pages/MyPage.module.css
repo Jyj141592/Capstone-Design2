@@ -1,4 +1,4 @@
-.main-page {
+.mainPage {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -6,17 +6,17 @@
   margin-bottom: 100px;
 }
 
-.profile-section {
+.profileSection {
   margin-bottom: 40px;
 }
 
-.profile-section h2 {
+.profileSection h2 {
   color: #666;
   font-size: 20px;
   margin-bottom: 40px;
 }
 
-.profile-card {
+.profileCard {
   display: flex;
   align-items: center;
   position: relative;
@@ -27,14 +27,14 @@
   padding: 50px;
 }
 
-.profile-avatar-wrapper {
+.profileAvatarWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-right: 24px;
 }
 
-.profile-avatar {
+.profileAvatar {
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -42,7 +42,7 @@
   margin-left: 30px;
 }
 
-.btn-edit {
+.btnEdit {
   margin-top: 20px;
   margin-left: 30px;
   padding: 6px 12px;
@@ -54,18 +54,18 @@
   cursor: pointer;
 }
 
-.profile-info p {
+.profileInfo p {
   margin: 10px 0;
   padding: 0 50px;
   color: #555;
 }
 
-.profile-info .value {
+.profileInfo .value {
   color: #1976d2;
   margin-left: 15px;
 }
 
-.btn-withdraw {
+.btnWithdraw {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -79,65 +79,65 @@
   cursor: pointer;
 }
 
-.club-section {
+.clubSection {
   margin-bottom: 30px;
 }
 
-.section-header {
+.sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
 }
 
-.section-header h2 {
+.sectionHeader h2 {
   color: #666;
   font-size: 20px;
   margin: 0;
 }
 
-.link-more {
+.linkMore {
   font-size: 14px;
   color: #666;
   text-decoration: none;
   margin: 0;
 }
 
-.person-section {
+.personSection {
   margin-bottom: 80px;
 }
 
-.person-section h2 {
+.personSection h2 {
   color: #666;
   font-size: 20px;
   margin-bottom: 30px;
 }
 
-.person-list {
+.personList {
   display: flex;
   align-items: center;
   gap: 32px;
 }
 
-.person-card {
+.personCard {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.person-avatar {
+.personAvatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.person-name {
+.personName {
   margin-top: 15px;
   color: #555;
 }
 
-.link-more {
+.linkMore {
   background: none;
   border: none;
   padding: 0;

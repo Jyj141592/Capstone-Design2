@@ -68,3 +68,48 @@ export const mockManageProteges = [
   { id: 2, name: "피보호자2", avatarUrl: "/images/avatar_default.jpg" },
   { id: 3, name: "피보호자3", avatarUrl: "/images/avatar_default.jpg" },
 ];
+
+export const mockActivities = {
+  1: [
+    {
+      title: "정기 라운딩",
+      date: "2025-04-01",
+      content: "봄맞이 정기 라운딩을 진행했습니다.",
+    },
+    {
+      title: "초보자 교육",
+      date: "2025-03-20",
+      content: "신규 가입자들을 위한 스윙 기초 교육을 진행했습니다.",
+    },
+  ],
+  2: [
+    {
+      title: "트레킹 모임",
+      date: "2025-04-03",
+      content: "한강변 트레킹 10km를 함께 걸었습니다.",
+    },
+    {
+      title: "러닝 클래스",
+      date: "2025-03-15",
+      content: "기초 러닝 자세를 배우는 수업을 열었습니다.",
+    },
+  ],
+  3: [
+    {
+      title: "등산 정모",
+      date: "2025-04-05",
+      content: "관악산을 함께 등반했습니다.",
+    },
+    {
+      title: "등산 장비 워크숍",
+      date: "2025-03-22",
+      content: "배낭, 신발, 스틱 등 장비 소개 및 실습을 진행했습니다.",
+    },
+  ],
+};
+
+export const mockNotices = {
+  1: "1 가입 시 주의사항",
+  2: "2 가입 시 주의사항",
+  3: "3 가입 시 주의사항",
+};
