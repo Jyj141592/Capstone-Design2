@@ -1,9 +1,11 @@
 import {Formik,Field,Form,ErrorMessage} from 'formik';
 import { useAuth } from '../auth/AuthContext';
 import styles from './Login.module.css'
+import { useNavigate } from 'react-router-dom';
 
 function Login(){
     const authContext = useAuth();
+    const navigate = useNavigate();
 
     function validate(values){
         const errors = {};
@@ -14,7 +16,7 @@ function Login(){
     async function onSubmit(values, setSubmitting){
         const success = await authContext.login(values.username, values.password);
         if(success){
-            console.log("success");
+            navigate("/");
         }
         else{
             console.log("failed");
@@ -34,15 +36,15 @@ function Login(){
                 ({isSubmitting})=>(
                     <Form className={styles.form}>
                         <div className={styles.inputGroup}>
-                            <Field type="text" name="username" placeholder="username" className={styles.input}/>
+                            <Field type="text" name="username" placeholder="ID" className={styles.input}/>
                             <ErrorMessage name="username" component="div" className={styles.error}/>
                         </div>
                         <div className={styles.inputGroup}>
-                            <Field type="password" name="password" placeholder="password" className={styles.input}/>
+                            <Field type="password" name="password" placeholder="비밀번호" className={styles.input}/>
                             <ErrorMessage name="password" component="div" className={styles.error}/>
                         </div>
                         <button type="submit" disabled={isSubmitting} className={styles.button}>
-                            Login
+                            로그인
                         </button>
                     </Form>
                 )

@@ -7,7 +7,10 @@ import com.moemhub.moem.model.Account;
 import com.moemhub.moem.repository.AccountRepository;
 import com.moemhub.moem.security.JwtTokenProvider;
 import com.moemhub.moem.security.UsernamePwdAuthenticationProvider;
+import com.moemhub.moem.service.FileService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,8 +19,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -27,6 +32,7 @@ public class AuthService {
     private final AuthenticationProvider authenticationProvider;
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FileService fileService;
 
     public JwtToken login(LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
@@ -45,16 +51,20 @@ public class AuthService {
         return jwtTokenProvider.generateByRefreshToken(refreshToken);
     }
 
-    public boolean register(RegisterDto registerDto) {
+    public boolean register(RegisterDto registerDto, MultipartFile profile) throws IOException {
         Optional<Account> account = accountRepository.findByUsername(registerDto.getUsername());
         if(account.isPresent()) return false;
+        String profileImage = null;
+        if(profile != null && !profile.isEmpty()){
+        		profileImage = fileService.uploadProfile(profile);
+        }
         try {
             String hashPwd = passwordEncoder.encode(registerDto.getPassword());
             Account newAccount = Account.builder()
                     .username(registerDto.getUsername())
                     .password(hashPwd)
                     .name(registerDto.getName())
-                    .profileImage(registerDto.getProfileImage())
+                    .profileImage(profileImage)
                     .age(registerDto.getAge())
                     .gender(registerDto.getGender())
                     .region(registerDto.getRegion())

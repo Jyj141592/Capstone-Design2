@@ -22,7 +22,7 @@ public class FileController {
         }
         try {
             String fileName = fileService.upload(file, clubID);
-            return ResponseEntity.ok("/files/download/"+clubID+"/"+ fileName);
+            return ResponseEntity.ok(fileName);
         }
         catch (IOException e) {
             return ResponseEntity.internalServerError().body("IO error");
@@ -34,6 +34,34 @@ public class FileController {
         System.out.println("come here");
         try{
             Resource resource = fileService.download(clubID, fileName);
+            if(resource == null){
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok().body(resource);
+        }
+        catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    
+    @PostMapping("/upload/profile")
+    public ResponseEntity<String> uploadProfile(@RequestParam("file") MultipartFile file) {
+        if(file.isEmpty()){
+            return ResponseEntity.badRequest().body("file is empty");
+        }
+        try {
+            String fileName = fileService.uploadProfile(file);
+            return ResponseEntity.ok(fileName);
+        }
+        catch (IOException e) {
+            return ResponseEntity.internalServerError().body("IO error");
+        }
+    }
+    @GetMapping("/download/profile/{fileName}")
+    public ResponseEntity<Resource> downloadProfile(@PathVariable String fileName) throws IOException {
+        System.out.println("come here");
+        try{
+            Resource resource = fileService.downloadProfile(fileName);
             if(resource == null){
                 return ResponseEntity.notFound().build();
             }

@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,9 +60,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<Void> register(@RequestPart("data") RegisterDto registerDto,
+    										@RequestPart(value="profile", required=false) MultipartFile profile) {
         try {
-            if (authService.register(registerDto)) {
+            if (authService.register(registerDto, profile)) {
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();

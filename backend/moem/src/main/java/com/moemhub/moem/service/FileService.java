@@ -41,4 +41,30 @@ public class FileService {
         }
         return new UrlResource(path.toUri());
     }
+    
+    public String uploadProfile(MultipartFile file) throws IOException {
+        Path path = Path.of(fileDir, "profile");
+        if(!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+        if (originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+        String filename = UUID.randomUUID().toString() + extension;
+        Path uploadPath = Path.of(fileDir, "profile", filename);
+        file.transferTo(uploadPath);
+
+        return filename;
+    }
+
+    public Resource downloadProfile(String fileName) throws IOException {
+        Path path = Path.of(fileDir, "profile", fileName);
+        if(!Files.exists(path)){
+            return null;
+        }
+        return new UrlResource(path.toUri());
+    }
 }
