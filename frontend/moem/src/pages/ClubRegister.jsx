@@ -10,11 +10,16 @@ function ClubRegister() {
   const [searchParams] = useSearchParams();
   const clubId = searchParams.get("clubId");
   const [notice, setNotice] = useState("");
-  const [form, setForm] = useState({ guardian: "", message: "" });
+  const [form, setForm] = useState({ proteges: [], message: "" });
+  const [protegeList, setProtegeList] = useState([]);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     setNotice(mockNotices[clubId] || "주의사항 정보가 없습니다.");
+    import("../mock/data").then(({ mockProteges }) =>
+      setProtegeList(mockProteges)
+    );
   }, [clubId]);
 
   const handleChange = (e) => {
@@ -24,6 +29,12 @@ function ClubRegister() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (form.proteges.length === 0) {
+      setError("피보호자를 최소 한 명 이상 선택해야 합니다.");
+      return;
+    }
+
+    setError("");
     console.log("제출 데이터:", {
       clubId,
       ...form,
@@ -40,18 +51,35 @@ function ClubRegister() {
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <label>
-          피보호자 이름
-          <input
-            type="text"
-            name="guardian"
-            value={form.guardian}
-            onChange={handleChange}
-            required
-          />
+          <span>피보호자 선택</span>
+          <div className={styles.protegeList}>
+            {protegeList.map((p) => {
+              const selected = form.proteges.includes(p.id);
+              return (
+                <div
+                  key={p.id}
+                  className={`${styles.protegeCard} ${
+                    selected ? styles.selected : ""
+                  }`}
+                  onClick={() => {
+                    const next = new Set(form.proteges);
+                    selected ? next.delete(p.id) : next.add(p.id);
+                    setForm((prev) => ({ ...prev, proteges: [...next] }));
+                  }}
+                >
+                  <img src={p.avatarUrl} alt={p.name} />
+                  <span>{p.name}</span>
+                </div>
+              );
+            })}
+          </div>
         </label>
-        <label>
+        {error && <p className={styles.error}>{error}</p>}
+
+        <label htmlFor="message">
           가입 인사
           <textarea
+            id="message"
             name="message"
             value={form.message}
             onChange={handleChange}

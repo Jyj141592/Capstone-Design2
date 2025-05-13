@@ -34,10 +34,10 @@ function App() {
           <Route path="/club/create" element={<ClubCreate />} />
           <Route path="/club/" element={<ClubLayout />}>
             <Route path=":clubId" element={<ClubMain />} />
-            <Route path=":clubId/manage" element={<ClubManager/>}/>
-            <Route path=":clubId/:boardId" element={<ClubBoard/>}/>
-            <Route path=":clubId/:boardId/write" element={<WritePost/>}/>
-            <Route path=":clubId/:boardId/:postId" element={<Post/>}/>
+            <Route path=":clubId/manage" element={<ClubManager />} />
+            <Route path=":clubId/:boardId" element={<ClubBoard />} />
+            <Route path=":clubId/:boardId/write" element={<WritePost />} />
+            <Route path=":clubId/:boardId/:postId" element={<Post />} />
           </Route>
           {/* 추가 페이지들은 여기에 계속 나열 */}
         </Routes>

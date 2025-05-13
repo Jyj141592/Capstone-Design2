@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../auth/AuthContext";
 import ClubCardList from "../components/ClubCardList";
 import ClubManageModal from "../components/ClubManageModal";
@@ -15,6 +15,8 @@ import {
 } from "../mock/data";
 
 export default function MyPage() {
+  const fileInputRef = useRef();
+  const [previewAvatar, setPreviewAvatar] = useState(null);
   const authContext = useAuth();
 
   const [profile, setProfile] = useState(null);
@@ -37,6 +39,13 @@ export default function MyPage() {
     setTempGuardians(mockManageGuardians);
     setTempProteges(mockManageProteges);
   }, []);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPreviewAvatar(URL.createObjectURL(file));
+    }
+  };
 
   const openGuardianModal = () => {
     setTempGuardians(
@@ -76,11 +85,23 @@ export default function MyPage() {
           <div className={styles.profileCard}>
             <div className={styles.profileAvatarWrapper}>
               <img
-                src={profile.avatarUrl}
+                src={previewAvatar || profile.avatarUrl}
                 alt="avatar"
                 className={styles.profileAvatar}
               />
-              <button className={styles.btnEdit}>프로필 변경</button>
+              <button
+                className={styles.btnEdit}
+                onClick={() => fileInputRef.current.click()}
+              >
+                프로필 변경
+              </button>
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleAvatarChange}
+              />
             </div>
             <div className={styles.profileInfo}>
               <p>

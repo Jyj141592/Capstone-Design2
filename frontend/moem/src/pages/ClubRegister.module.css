@@ -1,59 +1,141 @@
+/* -------------------- 레이아웃 -------------------- */
 .container {
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
 }
-.notice {
-  background: #fff3cd;
-  padding: 1rem;
-  border: 1px solid #ffeeba;
-  margin-bottom: 1.5rem;
-}
+
+/* -------------------- 폼 -------------------- */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.form label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form input,
 .form textarea {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.form button {
   padding: 0.75rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: border 0.2s;
 }
 
+.form input:focus,
+.form textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.textarea {
+  margin-bottom: 0.5rem;
+}
+
+/* -------------------- notice -------------------- */
+.notice {
+  background: #fff8e1;
+  padding: 1rem 1.25rem;
+  border: 1px solid #ffe082;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #5c3b00;
+  margin-bottom: 2rem;
+}
+
+/* -------------------- 버튼 -------------------- */
 .buttonRow {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
 .cancelButton,
 .submitButton {
   flex: 1;
   max-width: 200px;
-  padding: 0.75rem;
-  font-weight: bold;
+  padding: 0.9rem;
+  font-weight: 600;
+  font-size: 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .cancelButton {
-  background-color: #ccc;
+  background-color: #e0e0e0;
   color: #333;
+}
+
+.cancelButton:hover {
+  background-color: #c2c2c2;
 }
 
 .submitButton {
   background-color: #007bff;
   color: white;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}
+
+/* -------------------- protegeCard -------------------- */
+.protegeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.protegeCard {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  width: 100px;
+  cursor: pointer;
+  background-color: #fafafa;
+  transition: all 0.2s ease-in-out;
+}
+
+.protegeCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.protegeCard.selected {
+  border-color: #007bff;
+  background-color: #e6f0ff;
+}
+
+.protegeCard img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+/* -------------------- 에러 메시지 -------------------- */
+.error {
+  color: #d32f2f;
+  font-size: 14px;
+  margin-top: -20px;
+  margin-bottom: 8px;
 }
