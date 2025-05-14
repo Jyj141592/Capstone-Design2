@@ -5,24 +5,27 @@ import { CLUB_API } from '../../api/ClubApi';
 import { fetchImageUrl } from '../../services/FileService';
 import styles from './ClubSideMenu.module.css'
 
-function ClubSideMenu() {
-    const {clubId} = useParams();
-    const [imgUrl, setImgUrl] = useState(null);
-    
-    const profileImage = "5c205f7c-deff-4516-bb36-3a324908893a.png"
+function ClubSideMenu({clubInfo}) {
+    const [imgUrl, setImgUrl] = useState("/images/image_none.jpg");
+    const [boards, setBoards] = useState([]);
     useEffect(() => {
-        fetchImageUrl(clubId, profileImage)
+        fetchImageUrl(clubInfo.id, clubInfo.profileImageName)
             .then(url => {
                 if(url) setImgUrl(url);
             })
             .catch(err => {
                 console.log(err);
             });
-    }, [clubId]);
-
-    const description = "description";
-
-    const boardList = [{id: 'a', title: '1'}, {id: 'b', title: '2'}, {id: 'c', title: '3'}];
+        apiClient.get(CLUB_API.FETCH_BOARD_LIST(clubInfo.id))
+            .then(res=>{
+                setBoards(res.data);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        
+        setBoards([{id: 'a', name: '게시판1'}, {id: 'b', name: '게시판2'}, {id: 'c', name: '게시판3'}]);
+    }, [clubInfo]);
 
     return (
         <div className={styles.sidebar}>
@@ -30,14 +33,15 @@ function ClubSideMenu() {
                 <div className={styles.profileImageWrapper}>
                     <img src={imgUrl} alt="프로필" className={styles.profileImage}/>
                 </div>
-                <div className={styles.description}>{description}</div>
+                <h2 className={styles.name}>{clubInfo.name}</h2>
+                <div className={styles.description}>{clubInfo.description}</div>
             </div>
             <div className={styles.boardSection}>
                 <ul className={styles.boardList}>
                     {
-                        boardList.map(board => (
+                        boards.map(board => (
                             <li key={board.id} className={styles.boardItem}>
-                                <Link to={`/club/${clubId}/${board.id}`}>{board.title}</Link>
+                                <Link to={`/club/${clubInfo.id}/${board.id}`}>{board.name}</Link>
                             </li>
                         ))
                     }
