@@ -6,16 +6,18 @@ import { fetchImageUrl } from '../../services/FileService';
 import styles from './PostCard.module.css'
 
 function PostCard({clubId, boardId, post}){
-    const [imgUrl, setImgUrl] = useState(null);
-    const thumbnail = 'aa';
+    const [imgUrl, setImgUrl] = useState("/images/image_none.jpg");
+
     useEffect(() => {
-        fetchImageUrl(clubId, thumbnail)
-            .then(url => {
-                if(url) setImgUrl(url);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        if(post.thumbnail){
+            fetchImageUrl(clubId, post.thumbnail)
+                .then(url => {
+                    if(url) setImgUrl(url);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
     }, [clubId]);
 
 
@@ -25,6 +27,9 @@ function PostCard({clubId, boardId, post}){
                 <img src={imgUrl} alt="Thumbnail" className={styles.thumbnail}/>
                 <div className={styles.title}>
                     {post.title}
+                </div>
+                <div>
+                    {post.createdAt}
                 </div>
             </Link>
         </div>

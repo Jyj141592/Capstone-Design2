@@ -13,10 +13,10 @@ function ExploreClub() {
 
   useEffect(() => {
     setClubs([
-      { id: 1, name: "c1" },
-      { id: 2, name: "c2" },
-      { id: 3, name: "c3" },
-      { id: 4, name: "c4" },
+      { id: 1, name: "club1" },
+      { id: 2, name: "club2" },
+      { id: 3, name: "club3" },
+      { id: 4, name: "club4" },
     ]);
   }, []);
 

@@ -25,6 +25,11 @@
     height: 100%;
     object-fit: cover;
   }
+
+  .name {
+    font-size: 16px;
+    color: #333;
+  }
   
   .description {
     font-size: 14px;
@@ -49,12 +54,20 @@
   }
   
   .boardItem {
-    padding: 8px 0;
-    color: #555;
-    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
   
-  .boardItem:hover {
+  .boardItem a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #555;
+    border-radius: 8px;
+  }
+  
+  .boardItem:hover a {
+    background-color: #e0e0e0;
     color: #000;
     font-weight: bold;
   }

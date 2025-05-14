@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styles from './ClubManager.module.css';
 
+// 게시판 관리 기능도 만들어야 해
+
 function ClubManager(){
     const [membersModal, setMembersModal] = useState(false);
     const [managerModal, setManagerModal] = useState(false);

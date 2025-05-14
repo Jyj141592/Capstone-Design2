@@ -6,7 +6,7 @@ import { fetchImageUrl } from "../../services/FileService";
 import styles from "./ClubCard.module.css";
 
 function ClubCard({ clubInfo }) {
-  const [imgUrl, setImgUrl] = useState(null);
+  const [imgUrl, setImgUrl] = useState("/images/image_none.jpg");
   const profileImage = "aa";
 
   useEffect(() => {
