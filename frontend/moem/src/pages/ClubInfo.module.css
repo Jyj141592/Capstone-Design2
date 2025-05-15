@@ -3,7 +3,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: "Segoe UI", sans-serif;
+  font-family: sans-serif;
   color: #333;
   line-height: 1.6;
 }
@@ -30,22 +30,27 @@
 }
 
 .sectionHeader h2 {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 600;
   margin: 0;
 }
 
 .moreLink {
-  font-size: 14px;
-  color: #3a3b3c;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 13px;
+  color: #666;
+  background-color: rgb(235, 235, 235);
+  border-radius: 50px;
   text-decoration: none;
-  font-weight: 500;
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
 .moreLink:hover {
-  color: #0960bc;
-  text-decoration: underline;
+  color: #fff;
+  background-color: #007bff;
+  text-decoration: none;
 }
 
 /* -------------------- 활동 리스트 -------------------- */
@@ -85,7 +90,6 @@
   text-decoration: underline;
 }
 
-/* 제목과 날짜를 같은 줄에 정렬 */
 .activityTitleRow {
   display: flex;
   justify-content: space-between;
