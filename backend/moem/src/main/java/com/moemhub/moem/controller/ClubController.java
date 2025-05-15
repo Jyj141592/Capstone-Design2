@@ -168,21 +168,35 @@ public class ClubController {
 
     // Endpoint for creating join request
     @PostMapping("/{clubId}/join-requests")
-    public ResponseEntity<ClubJoinRequestDto.Response> requestToJoin(
+    public ResponseEntity<List<ClubJoinRequestDto.Response>> requestToJoin(
             @PathVariable Long clubId,
-            @RequestBody(required = false) ClubJoinRequestDto.Request requestDto) {
+            @RequestBody ClubJoinRequestDto.Request dto,
+            Authentication authentication) {
 
-        // Retrieve authenticated user's username
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        String requesterUsername = authentication.getName();
+        List<String> targetUsernames = dto.getUsernames();
+        String message = dto.getMessage();
 
-        // Use provided join request message or empty string if not provided
-        String message = (requestDto != null && requestDto.getMessage() != null) ? requestDto.getMessage() : "";
-        ClubJoinRequest joinRequest = clubService.requestToJoin(clubId, account.getId(), message);
-        return ResponseEntity.ok(convertToResponseDto(joinRequest));
+        List<ClubJoinRequest> requests =
+                clubService.requestToJoin(clubId, requesterUsername, targetUsernames, message);
+
+        List<ClubJoinRequestDto.Response> response = requests.stream()
+                .map(req -> {
+                    ClubJoinRequestDto.Response r = new ClubJoinRequestDto.Response();
+                    r.setId(req.getId());
+                    r.setClubId(req.getClub().getId());
+                    r.setClubName(req.getClub().getName());
+                    r.setUsername(req.getAccount().getUsername());
+                    r.setMessage(req.getMessage());
+                    r.setStatus(req.getStatus().name());
+                    r.setResponseMessage(req.getResponseMessage());
+                    return r;
+                })
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
+
 
     // Endpoint for retrieving pending join requests for a club
     @GetMapping("/{clubId}/join-requests")
@@ -209,27 +223,6 @@ public class ClubController {
         return ResponseEntity.ok(convertToResponseDto(processedRequest));
     }
 
-    // Endpoint for join request instead
-    @PostMapping("/{clubId}/wards/{wardId}/join-requests")
-    public ResponseEntity<ClubJoinRequestDto.Response> requestJoinInstead(
-            @PathVariable Long clubId,
-            @PathVariable Long wardId,
-            @RequestBody(required = false) ClubJoinRequestDto.Request requestDto,
-            Authentication authentication) {
-
-        String guardianUsername = authentication.getName();
-        Account guardian = accountRepository.findByUsername(guardianUsername)
-                .orElseThrow(() -> new RuntimeException("Guardian not found: " + guardianUsername));
-
-        String message = (requestDto != null && requestDto.getMessage() != null)
-                ? requestDto.getMessage()
-                : "";
-
-        ClubJoinRequest joinRequest = clubService.requestToJoinInstead(
-                clubId, wardId, guardian.getId(), message);
-
-        return ResponseEntity.ok(convertToResponseDto(joinRequest));
-    }
 
     @GetMapping("/recommend/interests")
     public ResponseEntity<List<ClubInfoDto>> recommendByInterests(Authentication authentication) {

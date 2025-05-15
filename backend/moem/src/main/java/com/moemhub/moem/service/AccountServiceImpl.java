@@ -78,41 +78,43 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void addGuardian(Long wardId, Long guardianId) {
-        Account ward     = accountRepository.findById(wardId)
-                .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardId));
-        Account guardian = accountRepository.findById(guardianId)
-                .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianId));
+    public void addGuardian(String wardUsername, String guardianUsername) {
+        Account ward = accountRepository.findByUsername(wardUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardUsername));
+        Account guardian = accountRepository.findByUsername(guardianUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianUsername));
 
         ward.getGuardians().add(guardian);
-        accountRepository.save(ward);
         guardian.getWards().add(ward);
+        accountRepository.save(ward);
     }
 
     @Override
-    public void removeGuardian(Long wardId, Long guardianId) {
-        Account ward     = accountRepository.findById(wardId)
-                .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardId));
-        Account guardian = accountRepository.findById(guardianId)
-                .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianId));
+    public void removeGuardian(String wardUsername, String guardianUsername) {
+        Account ward = accountRepository.findByUsername(wardUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardUsername));
+        Account guardian = accountRepository.findByUsername(guardianUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianUsername));
 
         ward.getGuardians().remove(guardian);
+        guardian.getWards().remove(ward);
+
         accountRepository.save(ward);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Account> getGuardians(Long wardId) {
-        Account ward = accountRepository.findById(wardId)
-                .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardId));
+    public List<Account> getGuardians(String wardUsername) {
+        Account ward = accountRepository.findByUsername(wardUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardUsername));
         return List.copyOf(ward.getGuardians());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Account> getWards(Long guardianId) {
-        Account guardian = accountRepository.findById(guardianId)
-                .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianId));
+    public List<Account> getWards(String guardianUsername) {
+        Account guardian = accountRepository.findByUsername(guardianUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianUsername));
         return List.copyOf(guardian.getWards());
     }
 

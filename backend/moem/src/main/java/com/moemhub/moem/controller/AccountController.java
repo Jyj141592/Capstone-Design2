@@ -48,39 +48,39 @@ public class AccountController {
     }
 
     // Add guardian to a ward
-    @PostMapping("/{wardId}/guardians/{guardianId}")
+    @PostMapping("/{wardUsername}/guardians/{guardianUsername}")
     public ResponseEntity<Void> addGuardian(
-            @PathVariable Long wardId,
-            @PathVariable Long guardianId) {
+            @PathVariable String wardUsername,
+            @PathVariable String guardianUsername) {
 
-        accountService.addGuardian(wardId, guardianId);
+        accountService.addGuardian(wardUsername, guardianUsername);
         return ResponseEntity.ok().build();
     }
 
     // Remove guardian from a ward
-    @DeleteMapping("/{wardId}/guardians/{guardianId}")
+    @DeleteMapping("/{wardUsername}/guardians/{guardianUsername}")
     public ResponseEntity<Void> removeGuardian(
-            @PathVariable Long wardId,
-            @PathVariable Long guardianId) {
+            @PathVariable String wardUsername,
+            @PathVariable String guardianUsername) {
 
-        accountService.removeGuardian(wardId, guardianId);
+        accountService.removeGuardian(wardUsername, guardianUsername);
         return ResponseEntity.noContent().build();
     }
 
     // Get all guardians of a ward
-    @GetMapping("/{wardId}/guardians")
+    @GetMapping("/{wardUsername}/guardians")
     public ResponseEntity<List<Account>> getGuardians(
-            @PathVariable Long wardId) {
+            @PathVariable String wardUsername) {
 
-        return ResponseEntity.ok(accountService.getGuardians(wardId));
+        return ResponseEntity.ok(accountService.getGuardians(wardUsername));
     }
 
     // Get all wards of a guardian
-    @GetMapping("/{guardianId}/wards")
+    @GetMapping("/{guardianUsername}/wards")
     public ResponseEntity<List<Account>> getWards(
-            @PathVariable Long guardianId) {
+            @PathVariable String guardianUsername) {
 
-        return ResponseEntity.ok(accountService.getWards(guardianId));
+        return ResponseEntity.ok(accountService.getWards(guardianUsername));
     }
 
     // Get all clubs of a user
