@@ -1,11 +1,11 @@
 .siteHeader {
   background: #fff;
-  /* border-bottom: 1px solid #eee; */
   padding: 0 130px;
   position: sticky;
   top: 0;
   z-index: 1000;
 }
+
 .headerInner {
   max-width: 1200px;
   margin: 0 auto;
@@ -14,19 +14,31 @@
   align-items: center;
   height: 60px;
 }
+
 .logo {
   font-size: 24px;
   font-weight: bold;
   color: #333;
   text-decoration: none;
 }
+
 .navLinks a,
 .navLinks button {
   margin-left: 16px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   color: #333;
   text-decoration: none;
   background: none;
   border: none;
+  border-bottom: 2px solid #ffffff;
   cursor: pointer;
+  transition: color 0.2s ease, border-bottom 0.2s ease;
+  padding: 4px 8px;
+}
+
+.navLinks a:hover,
+.navLinks button:hover {
+  color: #0077ff;
+  border-bottom: 2px solid #0077ff;
 }
