@@ -23,11 +23,6 @@ export default function Header() {
             <>
               <Link to="/login">로그인</Link>
               <Link to="/register">회원가입</Link>
-<<<<<<< HEAD
-              {/* <Link to="/mypage">내 정보</Link>
-              <button onClick={authContext.logout}>로그아웃</button> */}
-=======
->>>>>>> han
             </>
           )}
         </nav>
