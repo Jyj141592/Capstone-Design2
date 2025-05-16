@@ -37,7 +37,7 @@
   }
   
   .boardSection {
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #afa3a3;
     padding-top: 20px;
   }
   
@@ -56,19 +56,26 @@
   .boardItem {
     border-radius: 8px;
     transition: background-color 0.2s ease, color 0.2s ease;
+    margin-bottom: 1px;
   }
   
-  .boardItem a {
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #555;
-    border-radius: 8px;
-  }
-  
-  .boardItem:hover a {
-    background-color: #e0e0e0;
-    color: #000;
-    font-weight: bold;
-  }
-  
+.boardItem a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #555;
+  border-radius: 8px;
+  /* background-color: #f0f0f0; */
+  border: 1px solid #747474;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.boardItem:hover a,
+.boardItem:focus-within a {
+  background-color: #e0e0e0;
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
