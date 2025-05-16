@@ -20,16 +20,16 @@ public interface AccountService {
     AccountInfoDto getAccountInfoByUsername(String username);
 
     // Add a guardian to a ward
-    void addGuardian(Long wardId, Long guardianId);
+    void addGuardian(String wardUsername, String guardianUsername);
 
     // Remove a guardian from a ward
-    void removeGuardian(Long wardId, Long guardianId);
+    void removeGuardian(String wardUsername, String guardianUsername);
 
     // Retrieve all guardians of a ward
-    List<Account> getGuardians(Long wardId);
+    List<Account> getGuardians(String wardUsername);
 
     // Retrieve all wards of a guardian
-    List<Account> getWards(Long guardianId);
+    List<Account> getWards(String guardianUsername);
 
     // Retrieve all clubs of a user
     List<ClubInfoDto> getMyClubsByUsername(String username);

@@ -35,16 +35,13 @@ public interface ClubService {
     void leaveClub(Long clubId, Long accountId);
 
     // Create join request with given message
-    ClubJoinRequest requestToJoin(Long clubId, Long accountId, String message);
+    List<ClubJoinRequest> requestToJoin(Long clubId, String requesterUsername, List<String> targetUsernames, String message);
 
     // Retrieve all join requests pending for club
     List<ClubJoinRequest> getPendingRequests(Long clubId);
 
     // Retrieve join request by request ID
     ClubJoinRequest getJoinRequest(Long requestId);
-
-    // Request to join a club instead of a ward
-    ClubJoinRequest requestToJoinInstead(Long clubId, Long wardId, Long guardianId, String message);
 
     // Approve join request
     ClubJoinRequest approveJoinRequest(Long requestId, String responseMessage);

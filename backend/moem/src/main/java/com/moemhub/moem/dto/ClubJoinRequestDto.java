@@ -2,12 +2,15 @@ package com.moemhub.moem.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 public class ClubJoinRequestDto {
 
     // DTO for creating join request
     @Data
     public static class Request {
         private String message; // Join request message provided by user
+        private List<String> usernames;
     }
 
     // DTO for processing join request (approve/reject)
