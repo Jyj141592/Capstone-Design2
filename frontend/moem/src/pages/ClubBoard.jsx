@@ -1,6 +1,8 @@
 
 import { useEffect, useState } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
+import { apiClient } from '../api/ApiClient';
+import { CLUB_API } from '../api/ClubApi';
 import styles from './ClubBoard.module.css'
 
 function ClubBoard(){
@@ -10,11 +12,18 @@ function ClubBoard(){
     const [board, setBoard] = useState(null);
     const [page, setPage] = useState(1);
     const [posts, setPosts] = useState([]);
-    const entirePosts = 30;
+    const [maxPage, setMaxPage] = useState(0); 
     const singlePagePosts = 10;
-    const maxPage = entirePosts/singlePagePosts;
 
     useEffect(() => {
+        apiClient.get(CLUB_API.FETCH_BOARD_INFO(clubId, boardId))
+            .then(res=>{
+                setBoard(res.data);
+                setMaxPage(Math.ceil(board.count/singlePagePosts));
+            })
+            .catch(err => console.log(err));
+        
+
         setBoard({id: 1, title: 'activity', description:'activity board'});
         setPosts([{id: 1, title: 'aa'}, {id: 2, title: 'bb'}, {id: 3, title: 'cc'}, {id: 4, title: 'dd'}]);
         const searchParams = new URLSearchParams(location.search);
@@ -23,6 +32,15 @@ function ClubBoard(){
             setPage(pageNum);
         }
     }, []);
+    useEffect(()=>{
+        if(board){
+            apiClient.get(CLUB_API.FETCH_POST_LIST(clubId,boardId,page,singlePagePosts))
+                .then(res=>{
+                    setPosts(res.data);
+                })
+                .catch(err=>console.log(err));
+        }
+    },[page]);
 
     function goToPrevGroup(){
         const curPage = page;

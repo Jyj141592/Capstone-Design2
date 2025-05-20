@@ -1,6 +1,10 @@
 package com.moemhub.moem.service;
 
 import com.moemhub.moem.model.Post;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import com.moemhub.moem.dto.PostSummaryDto;
 import com.moemhub.moem.repository.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,7 +16,6 @@ import java.util.List;
 @Service
 @Transactional
 public class PostServiceImpl implements PostService {
-    private static final String DEFAULT_THUMBNAIL = "default_thumbnail.png";
     private final PostRepository postRepository;
 
     public PostServiceImpl(PostRepository postRepository) {
@@ -21,11 +24,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(Post post) {
-        if(post.getImages() != null && !post.getImages().isEmpty()) {
-            post.setThumbnail(post.getImages().get(0));
-        } else {
-            post.setThumbnail(DEFAULT_THUMBNAIL);
-        }
+
         return postRepository.save(post);
     }
 
@@ -40,14 +39,7 @@ public class PostServiceImpl implements PostService {
         Post post = getPostByID(id);
         post.setTitle(postData.getTitle());
         post.setContent(postData.getContent());
-        post.setSchedule(postData.getSchedule());
-        post.setImages(postData.getImages());
 
-        if(post.getImages() != null && !post.getImages().isEmpty()) {
-            post.setThumbnail(post.getImages().get(0));
-        } else {
-            post.setThumbnail(DEFAULT_THUMBNAIL);
-        }
         return postRepository.save(post);
     }
 
@@ -57,15 +49,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByBoardId(Long boardId) {
+    public Page<Post> getPostsByBoardId(Long boardId, int page, int size) {
         // Find posts by board ID
-        return postRepository.findByBoardId(boardId);
+    		Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return postRepository.findByBoardId(boardId, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostSummaryDto> getPostSummaryByBoardId(Long boardId) {
-        return postRepository.findByBoardId(boardId)
+    public List<PostSummaryDto> getPostSummaryByBoardId(Long boardId, int page, int size) {
+    	Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+    		return postRepository.findByBoardId(boardId, pageable)
                 .stream()
                 .map(post -> PostSummaryDto.builder()
                         .postID(post.getId())

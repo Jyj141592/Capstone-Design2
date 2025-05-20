@@ -1,12 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import { apiClient } from '../api/ApiClient';
+import { CLUB_API } from '../api/ClubApi';
 import styles from './ClubManager.module.css';
 
-// 게시판 관리 기능도 만들어야 해
 
 function ClubManager(){
+    const clubInfo = useOutletContext();
     const [membersModal, setMembersModal] = useState(false);
     const [managerModal, setManagerModal] = useState(false);
     const [applicantsModal, setApplicantsModal] = useState(false);
+    const [boards, setBoards] = useState([]);
+    const [changedBoards, setChangedBoards] = useState([]);
+    const [createdBoards, setCreatedBoards] = useState([]);
+
+    useEffect(()=>{
+        apiClient.get(CLUB_API.FETCH_BOARD_LIST(clubInfo.id))
+            .then(res=>{
+                setBoards(res.data);
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+    },[]);
 
     const members = [
         { id: 1, name: '홍길동', profileUrl: 'https://via.placeholder.com/50' },
@@ -52,6 +68,24 @@ function ClubManager(){
                     <input className={styles.input} type='text' />
                 </div>
                 <button className={styles.button}>적용</button>
+            </div>
+
+            <div className={styles.section}>
+                <h2 className={styles.subtitle}>게시판 관리</h2>
+                <ul className={styles.boardList}>
+                    {
+                        boards.map((board, index) => (
+                            <li key={board.id} className={styles.boardItem}>
+                                <input className={styles.input} type='text' defaultValue={board.name} placeholder='게시판 이름'/>
+                                <input className={styles.input} type='text' defaultValue={board.description} placeholder='게시판 설명'/>
+                            </li>
+                        ))
+                    }
+                    <button className={styles.button} onClick={() => {
+                        setBoards(prev=>[...prev, {id: Date.now(), name: '', description: ''}]);
+                    }}>게시판 추가</button>
+                    <button className={styles.button}>적용</button>
+                </ul>
             </div>
 
             <div className={styles.section}>

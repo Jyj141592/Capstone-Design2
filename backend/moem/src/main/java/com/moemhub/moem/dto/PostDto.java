@@ -13,10 +13,7 @@ public class PostDto {
         @NotBlank(message = "Title is mandatory")
         private String title;
         private String content;
-        private String schedule;
-        private List<String> images;
-        private Long authorId;
-        private Long boardId;
+        private String thumbnail;
     }
 
     @Data

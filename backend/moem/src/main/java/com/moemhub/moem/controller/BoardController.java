@@ -35,4 +35,8 @@ public class BoardController {
     public ResponseEntity<List<BoardDto>> listBoard(@PathVariable Long clubID) {
         return ResponseEntity.ok(boardService.listBoard(clubID));
     }
+    @GetMapping("/{clubID}/{boardID}")
+    public ResponseEntity<BoardDto> getBoard(@PathVariable Long clubID, @PathVariable Long boardID){
+    		return ResponseEntity.ok(boardService.getBoard(boardID, boardID));
+    }
 }

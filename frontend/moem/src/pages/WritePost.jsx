@@ -1,11 +1,14 @@
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 //import Quill from 'quill';
 //import ImageUploader from 'quill-image-uploader';
+import { useRef, useState } from 'react';
+import { uploadImage } from '../services/FileService';
+import { apiClient } from '../api/ApiClient';
+import { CLUB_API } from '../api/ClubApi';
 import styles from './WritePost.module.css'
-import { useState } from 'react';
 
 //Quill.register('modules/imageUploader', ImageUploader);
 
@@ -13,6 +16,8 @@ function WritePost(){
     const {clubId, boardId} = useParams();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const quillRef = useRef();
+    const navigate = useNavigate();
 
     const modules = {
         toolbar: {
@@ -20,8 +25,29 @@ function WritePost(){
         }
     };
 
-    function handleSubmit(){
-
+    async function handleSubmit(value){
+        let html = value;
+        const imgTags = [...html.matchAll(/<img[^>]+src="(data:image\/[^";]+;base64,[^"]+)"[^>]*>/g)];
+        let thumbnail = null;
+        for (const match of imgTags) {
+            const base64 = match[1];
+            const res = await fetch(base64);
+            const blob = await res.blob();
+            const formData = new FormData();
+            formData.append('file', blob, 'image.png');
+            const url = await uploadImage(clubId);
+            html = html.replace(base64, url);
+            if(thumbnail == null){
+                thumbnail = url;
+            }
+        }
+        const post = {title: title, content: html, thumbnail: thumbnail};
+        apiClient.post(CLUB_API.UPLOAD_POST(clubId, boardId), post)
+            .then(res => {
+                alert('작성 완료!');
+                navigate(`/clubs/${clubId}/${boardId}`);
+            })
+            .catch(err => console.log(err));
     }
 
     return (

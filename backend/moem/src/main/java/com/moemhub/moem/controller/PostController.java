@@ -1,6 +1,7 @@
 package com.moemhub.moem.controller;
 
 import com.moemhub.moem.dto.PostDto;
+import org.springframework.data.domain.Page;
 import com.moemhub.moem.dto.PostSummaryDto;
 import com.moemhub.moem.model.Board;
 import com.moemhub.moem.model.Post;
@@ -10,6 +11,7 @@ import com.moemhub.moem.repository.AccountRepository;
 import com.moemhub.moem.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -38,17 +40,16 @@ public class PostController {
             @PathVariable Long clubId,
             @PathVariable Long boardId,
             @Valid @RequestBody PostDto.CreateRequest req) {
-
+    		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    		
         Board board = boardRepo.findById(boardId)
                 .orElseThrow(() -> new RuntimeException("Board not found: " + boardId));
-        Account author = accountRepo.findById(req.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("Author not found: " + req.getAuthorId()));
+        Account author = accountRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Author not found: " + username));
 
         Post post = Post.builder()
                 .title(req.getTitle())
                 .content(req.getContent())
-                .schedule(req.getSchedule())
-                .images(req.getImages())
                 .board(board)
                 .author(author)
                 .build();
@@ -62,7 +63,8 @@ public class PostController {
     public ResponseEntity<PostDto.Response> getById(
             @PathVariable Long clubId,
             @PathVariable Long boardId,
-            @PathVariable Long postId) {
+            @PathVariable Long postId
+            ) {
 
         Post post = postService.getPostByClubAndBoard(clubId, boardId, postId);
         return ResponseEntity.ok(toResponse(post));
@@ -79,8 +81,6 @@ public class PostController {
         Post postData = Post.builder()
                 .title(req.getTitle())
                 .content(req.getContent())
-                .schedule(req.getSchedule())
-                .images(req.getImages())
                 .build();
 
         Post updated = postService.updatePost(postId, postData);
@@ -102,9 +102,11 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<PostDto.Response>> getPostsByBoardId(
             @PathVariable Long clubId,
-            @PathVariable Long boardId) {
+            @PathVariable Long boardId,
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="10") int size) {
 
-        List<Post> posts = postService.getPostsByBoardId(boardId);
+        Page<Post> posts = postService.getPostsByBoardId(boardId, page, size);
         List<PostDto.Response> dtoList = posts.stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
@@ -116,9 +118,11 @@ public class PostController {
     @GetMapping("/summary")
     public ResponseEntity<List<PostSummaryDto>> getPostSummaries(
             @PathVariable Long clubId,
-            @PathVariable Long boardId) {
+            @PathVariable Long boardId,
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="10") int size) {
 
-        List<PostSummaryDto> summaries = postService.getPostSummaryByBoardId(boardId);
+        List<PostSummaryDto> summaries = postService.getPostSummaryByBoardId(boardId, page, size);
         return ResponseEntity.ok(summaries);
     }
 
@@ -128,8 +132,6 @@ public class PostController {
         r.setTitle(post.getTitle());
         r.setContent(post.getContent());
         r.setCreatedAt(post.getCreatedAt());
-        r.setSchedule(post.getSchedule());
-        r.setImages(post.getImages());
         r.setThumbnail(post.getThumbnail());
         r.setAuthorId(post.getAuthor().getId());
         r.setBoardId(post.getBoard().getId());

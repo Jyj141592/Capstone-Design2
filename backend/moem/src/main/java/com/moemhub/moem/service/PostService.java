@@ -1,6 +1,7 @@
 package com.moemhub.moem.service;
 
 import com.moemhub.moem.dto.PostSummaryDto;
+import org.springframework.data.domain.Page;
 import com.moemhub.moem.model.Post;
 
 import java.util.List;
@@ -19,10 +20,10 @@ public interface PostService {
     void deletePost(Long id);
 
     // Get all posts by board ID
-    List<Post> getPostsByBoardId(Long boardId);
+    Page<Post> getPostsByBoardId(Long boardId, int page, int size);
 
     // Get Post summary by board ID
-    List<PostSummaryDto> getPostSummaryByBoardId(Long boardId);
+    List<PostSummaryDto> getPostSummaryByBoardId(Long boardId, int page, int size);
 
     // Get Post by its ID and board ID
     Post getPostByClubAndBoard(Long clubId, Long boardId, Long postId);

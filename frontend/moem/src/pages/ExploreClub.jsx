@@ -18,6 +18,12 @@ function ExploreClub() {
       { id: 3, name: "club3" },
       { id: 4, name: "club4" },
     ]);
+
+    apiClient.get(CLUB_API.RECOMMENDED_CLUB)
+      .then(res=>{
+        setClubs(res.data);
+      })
+      .catch(err=>console.log(err));
   }, []);
 
   function onSelection(selection) {
@@ -26,7 +32,20 @@ function ExploreClub() {
   function onKeyword(key) {
     setKeyword(keyword);
   }
-  function handleSearch() {}
+  function handleSearch() {
+    let api = CLUB_API.SEARCH_CLUB;
+    if (filter == "name"){
+      api = `${api}?name=${keyword}`;
+    }
+    else if(filter == "interest"){
+      api = `${api}?topic=${keyword}`;
+    }
+    apiClient.get(api)
+      .then(res=>{
+        setClubs(res.data);
+      })
+      .catch(err=>console.log(err));
+  }
 
   return (
     <div className={styles.container}>

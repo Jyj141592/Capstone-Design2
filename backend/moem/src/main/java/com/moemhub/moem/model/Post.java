@@ -30,13 +30,6 @@ public class Post {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    private String schedule;
-
-    @ElementCollection
-    @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
-    @Column(name = "image_url")
-    @Builder.Default
-    private List<String> images = new ArrayList<>();
 
     @Column(name = "thumbnail_url")
     private String thumbnail;
