@@ -59,6 +59,7 @@
 .pagination {
     margin-top: 20px;
     display: flex;
+    justify-content: center;
     gap: 6px;
 }
 
@@ -78,4 +79,54 @@
     background-color: #007bff;
     color: white;
     border-color: #007bff;
+}
+
+.postTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+}
+
+.postTable th, .postTable td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.postTable th:nth-child(1), .postTable td:nth-child(1) { /* 번호 */
+    width: 60px;
+    text-align: center;
+}
+
+.postTable th:nth-child(2), .postTable td:nth-child(2) { /* 제목 */
+    width: auto;
+}
+
+.postTable th:nth-child(3), .postTable td:nth-child(3) { /* 작성자 */
+    width: 100px;
+    text-align: center;
+}
+
+.postTable th:nth-child(4), .postTable td:nth-child(4) { /* 작성일자 */
+    width: 130px;
+    text-align: center;
+}
+.postTable th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+/* .postTable tr:hover td {
+    background-color: #f0f0f0;
+} */
+
+.emptyMessage {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+    cursor: default;
 }

@@ -1,132 +1,123 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik';
+import { apiClient } from "../api/ApiClient";
+import { CLUB_API } from "../api/ClubApi";
 import styles from "./ClubCreate.module.css";
 
 export default function ClubCreate() {
   const navigate = useNavigate();
+  const [preview, setPreview] = useState(null);
 
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-    image: null,
-    category: "",
-    region: "",
-    notice: "",
-  });
-  const [previewUrl, setPreviewUrl] = useState(null);
+  function validate(values){
+    const errors = {};
+    if(!values.name) errors.name = "모임 이름을 입력해주세요";
+    if(!values.topic) errors.topic = "모임 관심사를 입력해주세요";
+    return errors;
+  }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      // 파일 선택 안 했을 경우
-      setForm((prev) => ({ ...prev, image: null }));
-      setPreviewUrl(null);
-      return;
-    }
-    setForm((prev) => ({ ...prev, image: file }));
-    setPreviewUrl(URL.createObjectURL(file));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("모임 생성 데이터:", form);
-    alert("모임 생성 완료 (테스트)");
+  async function handleSubmit(values, setSubmitting) {
+    try{
+      const formData = new FormData();
+      if(values.profileImage){
+        formData.append('profile', values.profileImage);
+      }
+      
+      const dto = {
+        name: values.name,
+        description: values.description,
+        topic: values.topic,
+        region: values.region,
+        applicationPrecautions: values.applicationPrecautions,
+      };
+      formData.append('data', new Blob([JSON.stringify(dto)], {type: 'application/json'}));
+      apiClient.post(CLUB_API.CREATE_CLUB, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+        .then(res=>{
+          navigate(`/club/${res.data.id}`);
+        })
+        .catch(err=>console.log(err));
+    } catch(error){}
+    setSubmitting(false);
   };
 
   return (
-    <div className={styles.container}>
-      <h1>모임 생성</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <label>
-          프로필 사진
-          <input type="file" onChange={handleFileChange} accept="image/*" />
-        </label>
-        {previewUrl && (
-          <img
-            src={previewUrl}
-            alt="미리보기"
-            style={{
-              width: "100px",
-              height: "200px",
-              marginTop: "10px",
-              borderRadius: "8px",
-            }}
-          />
+    <div className={styles.formContainer}>
+      <h1 className={styles.title}>모임 생성</h1>
+      <Formik
+        initialValues={{
+          name: '',
+          description: '',
+          topic: '',
+          region: '',
+          applicationPrecautions: '',
+          profileImage: null
+        }}
+        validate={validate}
+        onSubmit={(values, {setSubmitting}) => handleSubmit(values, setSubmitting)}
+        validateOnChange={false}>
+        {({isSubmitting, setFieldValue, values}) => (
+          <Form className={styles.formInner}>
+            <div className={styles.content}> 
+              <div className={styles.profileSection}>
+                <img
+                  src={preview||'/images/image_none.jpg'}
+                  alt="Preview"
+                  className={styles.preview}/>
+                <label className={styles.uploadButton}>
+                  프로필 등록
+                  <input
+                    type="file"
+                    name="profileImage"
+                    style={{display:'none'}}
+                    onChange={(event)=>{
+                      setFieldValue('profileImage', event.currentTarget.files[0]);
+                      setPreview(URL.createObjectURL(event.currentTarget.files[0]));
+                    }}/>
+                </label>
+              </div>
+              <div className={styles.formWrapper}>
+                  <div className={styles.inputGroup}>
+                    <label>모임 이름</label>
+                    <Field type='text' name='name' className={styles.input} spellCheck={false}/>
+                    <ErrorMessage name='name' component='div' className={styles.error}/>
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>모임 소개</label>
+                    <Field as='textarea' name='description' className={styles.textarea} spellCheck={false}/>
+                    <ErrorMessage name='description' component='div' className={styles.error}/>
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>모임 관심사</label>
+                    <Field type='text' name='topic' className={styles.input} spellCheck={false}/>
+                    <ErrorMessage name='topic' component='div' className={styles.error}/>
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>활동 지역</label>
+                    <Field type='text' name='region' className={styles.input} spellCheck={false}/>
+                    <ErrorMessage name='region' component='div' className={styles.error}/>
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>신청 시 주의사항</label>
+                    <Field as='textarea' name='applicationPrecautions' className={styles.textarea} spellCheck={false}/>
+                    <ErrorMessage name='applicationPrecautions' component='div' className={styles.error}/>
+                  </div>
+              </div>
+            </div>
+            <div className={styles.buttonGroup}>
+              <button type="button" disabled={isSubmitting} className={styles.cancelButton} onClick={()=>navigate(-1)}>
+                취소
+              </button> 
+              <button type="submit" disabled={isSubmitting} className={styles.createButton}>
+                모임 생성
+              </button> 
+            </div>
+          </Form>
         )}
-
-        <label>
-          모임 이름
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          설명
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          카테고리
-          <input
-            type="text"
-            name="category"
-            value={form.category}
-            onChange={handleChange}
-            placeholder="예: 운동, 문화, 독서 등"
-            required
-          />
-        </label>
-
-        <label>
-          활동 지역
-          <input
-            type="text"
-            name="region"
-            value={form.region}
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          신청 주의사항
-          <textarea
-            name="notice"
-            value={form.notice}
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <div className={styles.buttonRow}>
-          <button
-            type="button"
-            className={styles.cancelButton}
-            onClick={() => navigate(-1)}
-          >
-            취소
-          </button>
-
-          <button type="submit" className={styles.submitButton}>
-            등록
-          </button>
-        </div>
-      </form>
+      </Formik>
     </div>
   );
 }

@@ -4,4 +4,5 @@ export const AUTH_API = {
     LOGOUT: "/signout",
     REGISTER: "/register",
     REFRESH_TOKEN: "/refresh",
+    CLUB_PRIVILEGE: (club_id)=>`/privilege/${club_id}`,
 };

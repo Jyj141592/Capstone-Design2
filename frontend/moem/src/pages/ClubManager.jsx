@@ -6,7 +6,7 @@ import styles from './ClubManager.module.css';
 
 
 function ClubManager(){
-    const clubInfo = useOutletContext();
+    const {clubInfo, privilege} = useOutletContext();
     const [membersModal, setMembersModal] = useState(false);
     const [managerModal, setManagerModal] = useState(false);
     const [applicantsModal, setApplicantsModal] = useState(false);

@@ -49,19 +49,29 @@ public class AccountController {
 
     // Add guardian to a ward
     @PostMapping("/{wardUsername}/guardians/{guardianUsername}")
-    public ResponseEntity<Void> addGuardian(
-            @PathVariable String wardUsername,
-            @PathVariable String guardianUsername) {
+    public ResponseEntity<AccountInfoDto> addGuardian(
+            @PathVariable(name="wardUsername") String wardUsername,
+            @PathVariable(name="guardianUsername") String guardianUsername) {
 
-        accountService.addGuardian(wardUsername, guardianUsername);
-        return ResponseEntity.ok().build();
+        var dto = accountService.addGuardian(wardUsername, guardianUsername);
+        return ResponseEntity.ok(dto);
     }
 
+    // Add ward to a guardian
+    @PostMapping("/{guardianUsername}/wards/{wardUsername}")
+    public ResponseEntity<AccountInfoDto> addWard(
+            @PathVariable(name="guardianUsername") String guardianUsername,
+            @PathVariable(name="wardUsername") String wardUsername) {
+
+        var dto = accountService.addWard(guardianUsername, wardUsername);
+        return ResponseEntity.ok(dto);
+    }
+    
     // Remove guardian from a ward
     @DeleteMapping("/{wardUsername}/guardians/{guardianUsername}")
     public ResponseEntity<Void> removeGuardian(
-            @PathVariable String wardUsername,
-            @PathVariable String guardianUsername) {
+            @PathVariable(name="wardUsername") String wardUsername,
+            @PathVariable(name="guardianUsername") String guardianUsername) {
 
         accountService.removeGuardian(wardUsername, guardianUsername);
         return ResponseEntity.noContent().build();
@@ -69,16 +79,16 @@ public class AccountController {
 
     // Get all guardians of a ward
     @GetMapping("/{wardUsername}/guardians")
-    public ResponseEntity<List<Account>> getGuardians(
-            @PathVariable String wardUsername) {
+    public ResponseEntity<List<AccountInfoDto>> getGuardians(
+            @PathVariable(name="wardUsername") String wardUsername) {
 
         return ResponseEntity.ok(accountService.getGuardians(wardUsername));
     }
 
     // Get all wards of a guardian
     @GetMapping("/{guardianUsername}/wards")
-    public ResponseEntity<List<Account>> getWards(
-            @PathVariable String guardianUsername) {
+    public ResponseEntity<List<AccountInfoDto>> getWards(
+            @PathVariable(name="guardianUsername") String guardianUsername) {
 
         return ResponseEntity.ok(accountService.getWards(guardianUsername));
     }

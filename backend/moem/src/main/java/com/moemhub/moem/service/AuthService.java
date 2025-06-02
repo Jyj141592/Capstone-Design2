@@ -4,7 +4,11 @@ import com.moemhub.moem.dto.JwtToken;
 import com.moemhub.moem.dto.LoginDto;
 import com.moemhub.moem.dto.RegisterDto;
 import com.moemhub.moem.model.Account;
+import com.moemhub.moem.model.Club;
+import com.moemhub.moem.model.ClubMember;
 import com.moemhub.moem.repository.AccountRepository;
+import com.moemhub.moem.repository.ClubMemberRepository;
+import com.moemhub.moem.repository.ClubRepository;
 import com.moemhub.moem.security.JwtTokenProvider;
 import com.moemhub.moem.security.UsernamePwdAuthenticationProvider;
 import com.moemhub.moem.service.FileService;
@@ -31,6 +35,9 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationProvider authenticationProvider;
     private final AccountRepository accountRepository;
+    private final ClubMemberRepository clubMemberRepository;
+    private final ClubRepository clubRepository;
+    
     private final PasswordEncoder passwordEncoder;
     private final FileService fileService;
 
@@ -86,5 +93,18 @@ public class AuthService {
         catch(Exception e) {
             return false;
         }
+    }
+    public String clubPrivilege(String username, Long clubId) {
+    		Optional<Account> account = accountRepository.findByUsername(username);
+    		if(account.isPresent()) {
+    			Optional<Club> club = clubRepository.findById(clubId);
+    			if(club.isPresent()) {
+    				Optional<ClubMember> member = clubMemberRepository.findByClubAndAccount(club.get(), account.get());
+    				if(member.isPresent()) {
+    					return member.get().getRole().toString();
+    				}
+    			}
+    		}
+    		return "NONE";
     }
 }

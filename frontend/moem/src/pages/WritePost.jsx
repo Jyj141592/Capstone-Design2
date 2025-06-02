@@ -26,7 +26,7 @@ function WritePost(){
     };
 
     async function handleSubmit(value){
-        let html = value;
+        let html = content;
         const imgTags = [...html.matchAll(/<img[^>]+src="(data:image\/[^";]+;base64,[^"]+)"[^>]*>/g)];
         let thumbnail = null;
         for (const match of imgTags) {
@@ -35,7 +35,7 @@ function WritePost(){
             const blob = await res.blob();
             const formData = new FormData();
             formData.append('file', blob, 'image.png');
-            const url = await uploadImage(clubId);
+            const url = await uploadImage(clubId, formData);
             html = html.replace(base64, url);
             if(thumbnail == null){
                 thumbnail = url;
@@ -45,7 +45,7 @@ function WritePost(){
         apiClient.post(CLUB_API.UPLOAD_POST(clubId, boardId), post)
             .then(res => {
                 alert('작성 완료!');
-                navigate(`/clubs/${clubId}/${boardId}`);
+                navigate(`/club/${clubId}/${boardId}`);
             })
             .catch(err => console.log(err));
     }

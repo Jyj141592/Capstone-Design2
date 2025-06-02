@@ -1,6 +1,7 @@
 package com.moemhub.moem.service;
 
 import com.moemhub.moem.dto.ClubInfoDto;
+import com.moemhub.moem.dto.ClubCreateDto;
 import com.moemhub.moem.model.Board;
 import com.moemhub.moem.model.Club;
 import com.moemhub.moem.model.Account;
@@ -15,11 +16,15 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @Service
 @Transactional
@@ -31,23 +36,40 @@ public class ClubServiceImpl implements ClubService {
     private final ClubMemberRepository clubMemberRepository;
     private final ClubJoinRequestRepository joinRequestRepository;
     private final BoardRepository boardRepository;
+    private final FileService fileService;
 
     @Override
-    public Club createClub(Club club, Account owner) {
+    public Club createClub(ClubCreateDto req, MultipartFile profile,  Account owner) {
+    	
+    		String profileImage = null;
+    		try {
+	        if(profile != null && !profile.isEmpty()){
+	        		profileImage = fileService.uploadProfile(profile);
+	        }
+    		}
+    		catch(Exception ignore) {}
+	    	Club club = Club.builder()
+	                .name(req.getName())
+	                .description(req.getDescription())
+	                .topic(req.getTopic())
+	                .profileImageName(profileImage)
+	                .region(req.getRegion())
+	                .applicationPrecautions(req.getApplicationPrecautions())
+	                .build();
         // Set the club owner
         club.setOwner(owner);
 
         // Create and associate Notice Board
         Board noticeBoard = Board.builder()
-                .name("Notice Board")
-                .description("Board for club announcements.")
+                .name("공지")
+                .description("공지 게시판입니다.")
                 .club(club)
                 .build();
 
         // Create and associate Activity Board
         Board activityBoard = Board.builder()
-                .name("Activity Board")
-                .description("Board for club activities.")
+                .name("활동 내역")
+                .description("활동 내역 게시판입니다.")
                 .club(club)
                 .build();
 
@@ -94,14 +116,14 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public void changeMemberRole(Long clubId, Long accountId, ClubMember.Role role) {
+    public void changeMemberRole(Long clubId, String username, ClubMember.Role role) {
         ClubMember member = clubMemberRepository.findByClubAndAccount(
                 clubRepository.findById(clubId)
                         .orElseThrow(() -> new EntityNotFoundException("Club not found: " + clubId)),
-                accountRepository.findById(accountId)
-                        .orElseThrow(() -> new EntityNotFoundException("Account not found: " + accountId))
+                accountRepository.findByUsername(username)
+                        .orElseThrow(() -> new EntityNotFoundException("Account not found: " + username))
         ).orElseThrow(() -> new EntityNotFoundException(
-                "Member not found in club " + clubId + " for account " + accountId
+                "Member not found in club " + clubId + " for account " + username
         ));
 
         if (member.getRole() == ClubMember.Role.OWNER) {
@@ -112,14 +134,14 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public void removeMember(Long clubId, Long accountId) {
+    public void removeMember(Long clubId, String username) {
         ClubMember member = clubMemberRepository.findByClubAndAccount(
                 clubRepository.findById(clubId)
                         .orElseThrow(() -> new EntityNotFoundException("Club not found: " + clubId)),
-                accountRepository.findById(accountId)
-                        .orElseThrow(() -> new EntityNotFoundException("Account not found: " + accountId))
+                accountRepository.findByUsername(username)
+                        .orElseThrow(() -> new EntityNotFoundException("Account not found: " + username))
         ).orElseThrow(() -> new EntityNotFoundException(
-                "Member not found in club " + clubId + " for account " + accountId
+                "Member not found in club " + clubId + " for account " + username
         ));
 
         if (member.getRole() == ClubMember.Role.OWNER) {
@@ -243,6 +265,14 @@ public class ClubServiceImpl implements ClubService {
         request.setStatus(ClubJoinRequest.RequestStatus.REJECTED);
         request.setResponseMessage(responseMessage);
         return joinRequestRepository.save(request);
+    }
+    
+    @Override
+    public List<ClubInfoDto> mainRecommendClubs(int count){
+    		Pageable pageable = PageRequest.of(0, count);
+    		Page<Club> page = clubRepository.findAll(pageable);
+    		List<Club> clubs = page.getContent();
+    		return clubs.stream().map(this::toDto).toList();
     }
 
     @Override

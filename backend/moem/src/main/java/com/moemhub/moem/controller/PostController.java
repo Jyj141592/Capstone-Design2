@@ -15,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,8 +39,8 @@ public class PostController {
     // Create new post
     @PostMapping
     public ResponseEntity<PostDto.Response> create(
-            @PathVariable Long clubId,
-            @PathVariable Long boardId,
+            @PathVariable(name="clubId") Long clubId,
+            @PathVariable(name="boardId") Long boardId,
             @Valid @RequestBody PostDto.CreateRequest req) {
     		String username = SecurityContextHolder.getContext().getAuthentication().getName();
     		
@@ -52,6 +54,7 @@ public class PostController {
                 .content(req.getContent())
                 .board(board)
                 .author(author)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         Post saved = postService.createPost(post);
@@ -61,9 +64,9 @@ public class PostController {
     // Get post by its ID
     @GetMapping("/{postId}")
     public ResponseEntity<PostDto.Response> getById(
-            @PathVariable Long clubId,
-            @PathVariable Long boardId,
-            @PathVariable Long postId
+            @PathVariable(name="clubId") Long clubId,
+            @PathVariable(name="boardId") Long boardId,
+            @PathVariable(name="postId") Long postId
             ) {
 
         Post post = postService.getPostByClubAndBoard(clubId, boardId, postId);
@@ -73,9 +76,9 @@ public class PostController {
     // Update existing post
     @PutMapping("/{postId}")
     public ResponseEntity<PostDto.Response> update(
-            @PathVariable Long clubId,
-            @PathVariable Long boardId,
-            @PathVariable Long postId,
+            @PathVariable(name="clubId") Long clubId,
+            @PathVariable(name="boardId") Long boardId,
+            @PathVariable(name="postId") Long postId,
             @Valid @RequestBody PostDto.UpdateRequest req) {
 
         Post postData = Post.builder()
@@ -90,9 +93,9 @@ public class PostController {
     // Delete post by its ID
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> delete(
-            @PathVariable Long clubId,
-            @PathVariable Long boardId,
-            @PathVariable Long postId) {
+            @PathVariable(name="clubId") Long clubId,
+            @PathVariable(name="boardId") Long boardId,
+            @PathVariable(name="postId") Long postId) {
 
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
@@ -101,8 +104,8 @@ public class PostController {
     // Get all posts by board ID
     @GetMapping
     public ResponseEntity<List<PostDto.Response>> getPostsByBoardId(
-            @PathVariable Long clubId,
-            @PathVariable Long boardId,
+            @PathVariable(name="clubId") Long clubId,
+            @PathVariable(name="boardId") Long boardId,
             @RequestParam(defaultValue="0") int page,
             @RequestParam(defaultValue="10") int size) {
 
@@ -117,10 +120,10 @@ public class PostController {
     // Get Post summary by board ID
     @GetMapping("/summary")
     public ResponseEntity<List<PostSummaryDto>> getPostSummaries(
-            @PathVariable Long clubId,
-            @PathVariable Long boardId,
-            @RequestParam(defaultValue="0") int page,
-            @RequestParam(defaultValue="10") int size) {
+            @PathVariable(name="clubId") Long clubId,
+            @PathVariable(name="boardId") Long boardId,
+            @RequestParam(defaultValue="0", name="page") int page,
+            @RequestParam(defaultValue="10", name="size") int size) {
 
         List<PostSummaryDto> summaries = postService.getPostSummaryByBoardId(boardId, page, size);
         return ResponseEntity.ok(summaries);

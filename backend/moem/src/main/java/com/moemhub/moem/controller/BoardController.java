@@ -15,28 +15,28 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
     @PostMapping("/create/{clubID}")
-    public ResponseEntity<BoardDto> createBoard(@PathVariable Long clubID, @RequestBody BoardDto boardDto) {
+    public ResponseEntity<BoardDto> createBoard(@PathVariable(name="clubID") Long clubID, @RequestBody BoardDto boardDto) {
         BoardDto response = boardService.createBoard(clubID, boardDto);
         if(response != null) return ResponseEntity.ok(response);
         return ResponseEntity.internalServerError().build();
     }
     @PostMapping("/update/{clubID}/{boardID}")
-    public ResponseEntity<BoardDto> updateBoard(@PathVariable Long clubID, @PathVariable Long boardID, @RequestBody BoardDto boardDto) {
+    public ResponseEntity<BoardDto> updateBoard(@PathVariable(name="clubID") Long clubID, @PathVariable(name="boardID") Long boardID, @RequestBody BoardDto boardDto) {
         BoardDto response = boardService.updateBoard(clubID, boardID, boardDto);
         if (response != null) return ResponseEntity.ok(response);
         return ResponseEntity.internalServerError().build();
     }
     @PostMapping("/delete/{clubID}/{boardID}")
-    public ResponseEntity<?> deleteBoard(@PathVariable Long clubID, @PathVariable Long boardID) {
+    public ResponseEntity<?> deleteBoard(@PathVariable(name="clubID") Long clubID, @PathVariable(name="boardID") Long boardID) {
         if (boardService.deleteBoard(clubID, boardID)) return ResponseEntity.ok().build();
         return ResponseEntity.internalServerError().build();
     }
     @GetMapping("/list/{clubID}")
-    public ResponseEntity<List<BoardDto>> listBoard(@PathVariable Long clubID) {
+    public ResponseEntity<List<BoardDto>> listBoard(@PathVariable(name="clubID") Long clubID) {
         return ResponseEntity.ok(boardService.listBoard(clubID));
     }
     @GetMapping("/{clubID}/{boardID}")
-    public ResponseEntity<BoardDto> getBoard(@PathVariable Long clubID, @PathVariable Long boardID){
-    		return ResponseEntity.ok(boardService.getBoard(boardID, boardID));
+    public ResponseEntity<BoardDto> getBoard(@PathVariable(name="clubID") Long clubID, @PathVariable(name="boardID") Long boardID){
+    		return ResponseEntity.ok(boardService.getBoard(clubID, boardID));
     }
 }

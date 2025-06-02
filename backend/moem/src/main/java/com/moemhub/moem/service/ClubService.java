@@ -1,17 +1,19 @@
 package com.moemhub.moem.service;
 
 import com.moemhub.moem.dto.ClubInfoDto;
+import com.moemhub.moem.dto.ClubCreateDto;
 import com.moemhub.moem.model.Account;
 import com.moemhub.moem.model.Club;
 import com.moemhub.moem.model.ClubJoinRequest;
 import com.moemhub.moem.model.ClubMember;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ClubService {
 
     // Create new club
-    Club createClub(Club club, Account owner);
+    Club createClub(ClubCreateDto club, MultipartFile profile, Account owner);
 
     // Update existing club information
     Club updateClub(Long clubId, Club club);
@@ -26,10 +28,10 @@ public interface ClubService {
     List<ClubMember> getClubMembers(Long clubId);
 
     // Change role of club member
-    void changeMemberRole(Long clubId, Long accountId, ClubMember.Role role);
+    void changeMemberRole(Long clubId, String username, ClubMember.Role role);
 
     // Remove member from club (for admins)
-    void removeMember(Long clubId, Long accountId);
+    void removeMember(Long clubId, String username);
 
     // Allow member to leave club on their own
     void leaveClub(Long clubId, Long accountId);
@@ -48,7 +50,8 @@ public interface ClubService {
 
     // Reject join request and update response message
     ClubJoinRequest rejectJoinRequest(Long requestId, String responseMessage);
-
+    
+    List<ClubInfoDto> mainRecommendClubs(int count);
     // Recommend clubs based on interests
     List<ClubInfoDto> recommendClubsByInterests(Long accountId);
 

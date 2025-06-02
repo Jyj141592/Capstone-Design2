@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class PostDto {
 
     @Data
@@ -21,8 +23,6 @@ public class PostDto {
         @NotBlank(message = "Title is mandatory")
         private String title;
         private String content;
-        private String schedule;
-        private List<String> images;
     }
 
     @Data
@@ -30,9 +30,8 @@ public class PostDto {
         private Long id;
         private String title;
         private String content;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         private LocalDateTime createdAt;
-        private String schedule;
-        private List<String> images;
         private String thumbnail;
         private Long authorId;
         private Long boardId;

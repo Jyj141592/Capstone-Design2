@@ -1,107 +1,187 @@
-/* -------------------- 레이아웃 -------------------- */
-.container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: "Segoe UI", "Pretendard", sans-serif;
-  color: #222;
+.formContainer {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 12px;
+.title {
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #333;
 }
 
-/* -------------------- 폼 -------------------- */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.formInner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
-label {
-  font-weight: 600;
-  font-size: 16px;
-  margin-bottom: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.content {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: flex-start;
 }
 
-/* -------------------- input -------------------- */
-input[type="text"],
-textarea,
-input[type="file"] {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 15px;
+.profileSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 180px;
+}
+
+.preview {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+}
+
+.uploadButton {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.uploadButton:hover {
+    background-color: #5a6268;
+}
+
+.formWrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputGroup label {
+    font-size: 20px; 
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.input {
+    padding: 10px 12px;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.2s;
+}
+
+.input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.error {
+    margin-top: 4px;
+    color: #d9534f;
+    font-size: 14px;
+}
+
+.textarea {
+    padding: 10px 12px;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.input,
+.textarea {
+  font-size: 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1.5;
+  padding: 10px 12px;
   border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
-input[type="text"]:focus,
-textarea:focus {
-  border-color: #007bff;
-  outline: none;
+
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
 }
 
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-/* -------------------- 프리뷰 이미지 -------------------- */
-.form img {
-  width: 100% !important;
-  max-width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-top: 0.5rem;
-}
-
-/* -------------------- 버튼 -------------------- */
-.buttonRow {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.cancelButton,
-.submitButton {
-  flex: 1;
-  max-width: 200px;
-  padding: 0.9rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s;
+.sharedButtonStyle {
+    padding: 12px 0;
+    width: 300px; /* 너비 늘림 */
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: center;
 }
 
 .cancelButton {
-  background-color: #e0e0e0;
-  color: #333;
+    composes: sharedButtonStyle;
+    background-color: #6c757d;
+    color: white;
 }
 
 .cancelButton:hover {
-  background-color: #c2c2c2;
+    background-color: #363b3e;
 }
 
-.submitButton {
-  background-color: #007bff;
-  color: white;
+.createButton {
+    composes: sharedButtonStyle;
+    background-color: #007bff;
+    color: white;
+}
+.createButton:hover {
+    background-color: #89b6e0;
 }
 
-.submitButton:hover {
-  background-color: #0056b3;
+.createButton:disabled {
+    background-color: #a0c4ff;
+    cursor: not-allowed;
+}
+
+
+.button {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    align-self: center;
+}
+
+.button:disabled {
+    background-color: #a0c4ff;
+    cursor: not-allowed;
+}
+
+.interestRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
 }

@@ -1,12 +1,16 @@
 package com.moemhub.moem.repository;
 
 import com.moemhub.moem.model.Club;
+import com.moemhub.moem.model.Post;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 @Repository
 public interface ClubRepository extends JpaRepository<Club, Long> {
@@ -23,4 +27,5 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
             @Param("topics") List<String> topics,
             @Param("region") String region
     );
+    Page<Club> findAll(Pageable pageable);
 }

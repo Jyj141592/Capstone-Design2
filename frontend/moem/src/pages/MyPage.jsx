@@ -5,12 +5,18 @@ import ClubManageModal from "../components/ClubManageModal";
 import ManageModal from "../components/ManageModal";
 import styles from "./MyPage.module.css";
 import { apiClient } from "../api/ApiClient";
+import { ACCOUNT_API } from "../api/AccountApi";
+import { useNavigate } from "react-router-dom";
+import { fetchProfileImageUrl } from "../services/FileService";
+import WardModal from "../components/WardModal";
+import ProfileList from "../components/ProfileList";
 
 export default function MyPage() {
   const fileInputRef = useRef();
   const authContext = useAuth();
+  const navigate = useNavigate();
 
-  const [previewAvatar, setPreviewAvatar] = useState(null);
+  const [previewAvatar, setPreviewAvatar] = useState('/images/avatar_default.jpg');
 
   const [profile, setProfile] = useState(null);
   const [myClubs, setMyClubs] = useState([]);
@@ -22,29 +28,43 @@ export default function MyPage() {
   const [showProtegeModal, setShowProtegeModal] = useState(false);
 
   useEffect(() => {
+    if(authContext.isLoading) return;
+    else if(!authContext.isAuthenticated) navigate('/');
     apiClient
-      .get("/api/accounts/info")
+      .get(ACCOUNT_API.ACCOUNT_INFO)
       .then((res) => {
         setProfile(res.data);
-        const username = res.data.username;
-
-        apiClient
-          .get(`/api/accounts/${username}/guardians`)
-          .then((res) => setGuardians(res.data))
-          .catch((err) => console.error("보호자 정보 로딩 실패", err));
-
-        apiClient
-          .get(`/api/accounts/${username}/wards`)
-          .then((res) => setProteges(res.data))
-          .catch((err) => console.error("피보호자 정보 로딩 실패", err));
       })
       .catch((err) => console.error("프로필 로딩 실패", err));
+  }, [authContext.isLoading, authContext.isAuthenticated]);
 
-    apiClient
-      .get("/api/accounts/my-clubs")
-      .then((res) => setMyClubs(res.data))
-      .catch((err) => console.error("내 동아리 로딩 실패", err));
-  }, []);
+  useEffect(()=>{
+    if(profile){
+      fetchProfileImageUrl(profile.profileImage)
+        .then(url=> {
+          if(url){
+            setPreviewAvatar(url);
+          }
+        })
+        .catch(err=>console.error(err));
+      apiClient
+        .get(ACCOUNT_API.GET_GUARDIANS(authContext.username))
+        .then((res) => setGuardians(res.data))
+        .catch((err) => console.error("보호자 정보 로딩 실패", err));
+
+      apiClient
+        .get(ACCOUNT_API.GET_WARDS(authContext.username))
+        .then((res) => setProteges(res.data))
+        .catch((err) => console.error("피보호자 정보 로딩 실패", err));
+      apiClient
+        .get(ACCOUNT_API.MY_CLUBS)
+        .then((res) => setMyClubs(res.data))
+        .catch((err) => console.error("내 동아리 로딩 실패", err));
+    }
+  }, [profile])
+
+  if(authContext.isLoading) return null;
+  else if(!authContext.isAuthenticated) navigate('/');
 
   const handleProfileChangeClick = () => {
     fileInputRef.current?.click();
@@ -94,7 +114,7 @@ export default function MyPage() {
         <div className={styles.profileCard}>
           <div className={styles.profileAvatarWrapper}>
             <img
-              src={previewAvatar || `/profile/${profile.profileImage}`}
+              src={previewAvatar}
               alt="프로필"
               className={styles.profileAvatar}
               onClick={handleProfileChangeClick}
@@ -124,7 +144,7 @@ export default function MyPage() {
             </p>
             <p>
               <strong>성별:</strong>{" "}
-              <span className={styles.value}>{profile.gender}</span>
+              <span className={styles.value}>{profile.gender === 'male' ? '남성' : '여성'}</span>
             </p>
             <p>
               <strong>지역:</strong>{" "}
@@ -144,14 +164,14 @@ export default function MyPage() {
       <section className={styles.clubSection}>
         <div className={styles.sectionHeader}>
           <h2>내 모임</h2>
-          <button
+          {/* <button
             className={styles.linkMore}
             onClick={() => setShowClubModal(true)}
           >
             모두보기 →
-          </button>
+          </button> */}
         </div>
-        <ClubCardList clubs={myClubs} />
+        <ClubCardList clubs={myClubs} myClub={true}/>
         {showClubModal && (
           <ClubManageModal onClose={() => setShowClubModal(false)} />
         )}
@@ -167,7 +187,8 @@ export default function MyPage() {
             모두보기 →
           </button>
         </div>
-        <div className={styles.personList}>
+        <ProfileList profiles={guardians} count = {5}/>
+        {/* <div className={styles.personList}>
           {guardians.map((g) => (
             <div key={g.id} className={styles.personCard}>
               <img
@@ -178,13 +199,19 @@ export default function MyPage() {
               <div className={styles.personName}>{g.name}</div>
             </div>
           ))}
-        </div>
+        </div> */}
         {showGuardianModal && (
-          <ManageModal
-            type="guardian"
-            items={guardians}
-            setItems={setGuardians}
+          // <ManageModal
+          //   type="guardian"
+          //   items={guardians}
+          //   setItems={setGuardians}
+          //   onClose={() => setShowGuardianModal(false)}
+          // />
+          <WardModal 
+            type='guardian'
             onClose={() => setShowGuardianModal(false)}
+            profiles={guardians}
+            onChanged={setGuardians}  
           />
         )}
       </section>
@@ -199,7 +226,7 @@ export default function MyPage() {
             모두보기 →
           </button>
         </div>
-        <div className={styles.personList}>
+        {/* <div className={styles.personList}>
           {proteges.map((p) => (
             <div key={p.id} className={styles.personCard}>
               <img
@@ -210,13 +237,20 @@ export default function MyPage() {
               <div className={styles.personName}>{p.name}</div>
             </div>
           ))}
-        </div>
+        </div> */}
+        <ProfileList profiles={proteges} count ={5}/>
         {showProtegeModal && (
-          <ManageModal
-            type="protege"
-            items={proteges}
-            setItems={setProteges}
+          // <ManageModal
+          //   type="protege"
+          //   items={proteges}
+          //   setItems={setProteges}
+          //   onClose={() => setShowProtegeModal(false)}
+          // />
+          <WardModal 
+            type='ward'
             onClose={() => setShowProtegeModal(false)}
+            profiles={proteges}
+            onChanged={setProteges}  
           />
         )}
       </section>

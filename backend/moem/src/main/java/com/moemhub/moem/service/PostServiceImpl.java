@@ -58,7 +58,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public List<PostSummaryDto> getPostSummaryByBoardId(Long boardId, int page, int size) {
-    	Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+    	Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
     		return postRepository.findByBoardId(boardId, pageable)
                 .stream()
                 .map(post -> PostSummaryDto.builder()

@@ -10,7 +10,7 @@ function ClubBoard(){
     const location = useLocation();
     const navigate = useNavigate();
     const [board, setBoard] = useState(null);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [posts, setPosts] = useState([]);
     const [maxPage, setMaxPage] = useState(0); 
     const singlePagePosts = 10;
@@ -18,29 +18,39 @@ function ClubBoard(){
     useEffect(() => {
         apiClient.get(CLUB_API.FETCH_BOARD_INFO(clubId, boardId))
             .then(res=>{
+                let m = Math.ceil(res.data.count/singlePagePosts);
+                setMaxPage(m);
+                if (m === 0) {
+                    setPage(0);
+                }
                 setBoard(res.data);
-                setMaxPage(Math.ceil(board.count/singlePagePosts));
             })
             .catch(err => console.log(err));
         
 
-        setBoard({id: 1, title: 'activity', description:'activity board'});
-        setPosts([{id: 1, title: 'aa'}, {id: 2, title: 'bb'}, {id: 3, title: 'cc'}, {id: 4, title: 'dd'}]);
+        // setBoard({id: 1, title: 'activity', description:'activity board'});
+        // setPosts([{id: 1, title: 'aa'}, {id: 2, title: 'bb'}, {id: 3, title: 'cc'}, {id: 4, title: 'dd'}]);
+        
+    }, []);
+
+    useEffect(()=>{
         const searchParams = new URLSearchParams(location.search);
-        const pageNum = searchParams.get('page');
-        if(pageNum !== null){
+        const pageNum = parseInt(searchParams.get('page'), 10);
+        if(pageNum !== null && maxPage >= pageNum){
             setPage(pageNum);
         }
-    }, []);
-    useEffect(()=>{
-        if(board){
+        else {
+            setPage(1);
+        }
+
+        if(board !== null && page !== 0){
             apiClient.get(CLUB_API.FETCH_POST_LIST(clubId,boardId,page,singlePagePosts))
                 .then(res=>{
                     setPosts(res.data);
                 })
                 .catch(err=>console.log(err));
         }
-    },[page]);
+    }, [board, page])
 
     function goToPrevGroup(){
         const curPage = page;
@@ -62,7 +72,7 @@ function ClubBoard(){
 
     const pageNumbers = [];
     const curPageStart = page - (page % 5) + 1;
-    const curPageEnd = curPageStart + 4 >= maxPage ? curPageStart + 4 : maxPage;
+    const curPageEnd = curPageStart + 4 < maxPage ? curPageStart + 4 : maxPage;
     for(let i = curPageStart; i <= curPageEnd; i++){
         pageNumbers.push(i);
     }
@@ -70,22 +80,46 @@ function ClubBoard(){
         <div className={styles.container}>
             {board &&
                 (<div className={styles.boardInfo}>
-                    <h2 className={styles.boardTitle}>{board.title}</h2>
+                    <h2 className={styles.boardTitle}>{board.name}</h2>
                     <p className={styles.boardDesc}>{board.description}</p>
                 </div>)
             }
             <div className={styles.header}>
                 <button className={styles.writeBtn} onClick={onWrite}>글쓰기</button>
             </div>
-            <ul className={styles.postList}>
-                {
-                    posts.map(post=>(
-                        <li key={post.id} className={styles.postItem}>
-                            <Link to ={`/club/${clubId}/${boardId}/${post.id}`} className={styles.postLink}>{post.title}</Link> 
-                        </li>
-                    ))
-                }
-            </ul>
+            <table className={styles.postTable}>
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성 일자</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        posts.length > 0 ? (
+                        posts.map((post, index) => (
+                            <tr key={post.postID}>
+                                <td>{(page - 1) * singlePagePosts + index + 1}</td>
+                                <td>
+                                    <Link to={`/club/${clubId}/${boardId}/${post.postID}`} className={styles.postLink}>
+                                    {post.title}
+                                    </Link>
+                                </td>
+                                <td>{post.authorName}</td>
+                                <td>{post.createdAt}</td>
+                            </tr>
+                        ))
+                        ) : (
+                        <tr>
+                            <td colSpan="4" className={styles.emptyMessage}>게시글이 없습니다.</td>
+                        </tr>
+                        )
+                    }
+                </tbody>
+            </table>
+
             <div className={styles.pagination}>
                 <button onClick={goToPrevGroup} disabled={page < 6}>
                     {'<<'}
@@ -97,7 +131,7 @@ function ClubBoard(){
                     ))
                 }
 
-                <button onClick={goToNextGroup} disable = {page - (page % 5) + 6 <= maxPage}>
+                <button onClick={goToNextGroup} disabled = {page - (page % 5) + 6 > maxPage}>
                     {'>>'}
                 </button>
             </div>

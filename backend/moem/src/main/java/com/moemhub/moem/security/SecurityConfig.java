@@ -44,7 +44,7 @@ public class SecurityConfig {
                 }
             }))
             .authorizeHttpRequests(auth->
-                    auth.requestMatchers("/login", "/refresh", "/register", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    auth.requestMatchers("/login", "/refresh", "/register", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api/clubs/recommend", "/files/download/profile/*", "/files/download/*/activity/*", "/api/clubs/*/info", "/api/clubs/*/activity", "/api/clubs/*/activity/*").permitAll()
                             .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), BasicAuthenticationFilter.class)

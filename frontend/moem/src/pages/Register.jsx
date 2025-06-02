@@ -1,7 +1,6 @@
 import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik';
 import { apiClient } from '../api/ApiClient';
 import { AUTH_API } from '../api/AuthApi';
-import { uploadProfileImage } from '../services/FileService';
 import styles from './Register.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -136,10 +135,10 @@ function Register() {
                                                 {values.interests.map((_, index) => (
                                                     <div key={index} className={styles.interestRow}>
                                                         <Field name={`interests.${index}`} className={styles.input} />
-                                                        <button type="button" onClick={() => remove(index)}>–</button>
+                                                        <button type="button" onClick={() => remove(index)} className={styles.removeButton}>–</button>
                                                     </div>
                                                 ))}
-                                                <button type="button" onClick={() => push('')}>+ 관심사 추가</button>
+                                                <button type="button" onClick={() => push('')} className={styles.addInterestButton}>+ 관심사 추가</button>
                                             </div>
                                         )}
                                     </FieldArray>

@@ -1,30 +1,40 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "../api/ApiClient";
 import { CLUB_API } from "../api/ClubApi";
-import ClubCard from "../components/Club/ClubCard";
+import ClubCard from "../components/ClubCard";
 import styles from "./ExploreClub.module.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 function ExploreClub() {
   const [clubs, setClubs] = useState([]);
   const [filter, setFilter] = useState(null);
   const [keyword, setKeyword] = useState(null);
+  const authContext = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setClubs([
-      { id: 1, name: "club1" },
-      { id: 2, name: "club2" },
-      { id: 3, name: "club3" },
-      { id: 4, name: "club4" },
-    ]);
-
-    apiClient.get(CLUB_API.RECOMMENDED_CLUB)
-      .then(res=>{
-        setClubs(res.data);
-      })
-      .catch(err=>console.log(err));
-  }, []);
+    // setClubs([
+    //   { id: 1, name: "club1" },
+    //   { id: 2, name: "club2" },
+    //   { id: 3, name: "club3" },
+    //   { id: 4, name: "club4" },
+    // ]);
+    if(!authContext.isLoading){
+      if(authContext.isAuthenticated){
+        apiClient.get(CLUB_API.RECOMMENDED_CLUB)
+          .then(res=>{
+            setClubs(res.data);
+          })
+          .catch(err=>console.log(err));
+      }
+      else{
+        apiClient.get(CLUB_API.MAIN_CLUB(20))
+          .then(res=>setClubs(res.data))
+          .catch(err=>console.log(err));
+      }
+    }
+  }, [authContext.isAuthenticated, authContext.isLoading]);
 
   function onSelection(selection) {
     setFilter(selection);
@@ -46,6 +56,7 @@ function ExploreClub() {
       })
       .catch(err=>console.log(err));
   }
+  if (authContext.isLoading) return null;
 
   return (
     <div className={styles.container}>
@@ -77,8 +88,8 @@ function ExploreClub() {
         <h2 className={styles.sectionTitle}>추천</h2>
         <ul className={styles.clubList}>
           {clubs.map((club) => (
-            <li key={club.id} className={styles.clubItem}>
-              <ClubCard clubInfo={club} />
+            <li key={club.id}>
+              <ClubCard club={club} />
             </li>
           ))}
         </ul>

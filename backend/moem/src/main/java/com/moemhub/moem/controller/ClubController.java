@@ -2,14 +2,19 @@ package com.moemhub.moem.controller;
 
 import com.moemhub.moem.dto.ClubCreateDto;
 import com.moemhub.moem.dto.ClubUpdateDto;
+import com.moemhub.moem.dto.PostDto;
 import com.moemhub.moem.dto.ClubInfoDto;
+import com.moemhub.moem.dto.ClubJoinInfoDto;
 import com.moemhub.moem.dto.ClubJoinRequestDto;
 import com.moemhub.moem.dto.ClubMemberDto;
 import com.moemhub.moem.dto.BoardDto;
 import com.moemhub.moem.dto.PostSummaryDto;
+import com.moemhub.moem.dto.RegisterDto;
 import com.moemhub.moem.model.Account;
+import com.moemhub.moem.model.Board;
 import com.moemhub.moem.model.Club;
 import com.moemhub.moem.model.ClubJoinRequest;
+import com.moemhub.moem.model.Post;
 import com.moemhub.moem.repository.AccountRepository;
 import com.moemhub.moem.service.ClubService;
 import com.moemhub.moem.service.BoardService;
@@ -20,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,23 +54,15 @@ public class ClubController {
     // Endpoint for creating a new club
     @PostMapping
     public ResponseEntity<ClubInfoDto> createClub(
-            @Valid @RequestBody ClubCreateDto req,
+    			@RequestPart("data") ClubCreateDto req,
+			@RequestPart(value="profile", required=false) MultipartFile profile,
             Authentication authentication) {
 
         String username = authentication.getName();
         Account owner = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
-        Club club = Club.builder()
-                .name(req.getName())
-                .description(req.getDescription())
-                .topic(req.getTopic())
-                .profileImageName(req.getProfileImageName())
-                .region(req.getRegion())
-                .applicationPrecautions(req.getApplicationPrecautions())
-                .build();
-
-        Club created = clubService.createClub(club, owner);
+        Club created = clubService.createClub(req, profile, owner);
 
         ClubInfoDto resp = ClubInfoDto.builder()
                 .id(created.getId())
@@ -81,7 +80,7 @@ public class ClubController {
     // Endpoint for update club
     @PutMapping("/{clubId}")
     public ResponseEntity<ClubInfoDto> updateClub(
-            @PathVariable Long clubId,
+            @PathVariable(name="clubId") Long clubId,
             @Valid @RequestBody ClubUpdateDto req) {
 
         Club toUpdate = Club.builder()
@@ -110,14 +109,14 @@ public class ClubController {
 
     // Endpoint for deleting a club
     @DeleteMapping("/{clubId}")
-    public ResponseEntity<Void> deleteClub(@PathVariable Long clubId) {
+    public ResponseEntity<Void> deleteClub(@PathVariable(name="clubId") Long clubId) {
         clubService.deleteClub(clubId);
         return ResponseEntity.noContent().build();
     }
 
     // Endpoint for retrieving club info
-    @GetMapping("/{clubId}")
-    public ResponseEntity<ClubInfoDto> getClubInfo(@PathVariable Long clubId) {
+    @GetMapping("/{clubId}/info")
+    public ResponseEntity<ClubInfoDto> getClubInfo(@PathVariable(name="clubId") Long clubId) {
         Club club = clubService.getClubById(clubId);
         ClubInfoDto dto = ClubInfoDto.builder()
                 .id(club.getId())
@@ -130,32 +129,62 @@ public class ClubController {
                 .build();
         return ResponseEntity.ok(dto);
     }
-
+    @GetMapping("/{clubId}/join-info")
+    public ResponseEntity<ClubJoinInfoDto> getClubJoinInfo(@PathVariable(name="clubId") Long clubId) {
+    		Club club = clubService.getClubById(clubId);
+    		return ResponseEntity.ok(ClubJoinInfoDto.builder().precaution(club.getApplicationPrecautions()).build());
+    }
+    
+    @GetMapping("/{clubId}/activity")
+    public ResponseEntity<List<PostSummaryDto>> getActivity(@PathVariable(name="clubId") Long clubId){
+    		Club club = clubService.getClubById(clubId);
+    		Board activityBoard = club.getActivityBoard();
+    		List<PostSummaryDto> dto = postService.getPostSummaryByBoardId(activityBoard.getId(), 1, 5);
+    		return ResponseEntity.ok(dto);
+    }
+    @GetMapping("/{clubId}/activity/{postId}")
+    public ResponseEntity<PostDto.Response> getActivityPost(@PathVariable(name="clubId") Long clubId, @PathVariable(name="postId") Long postId){
+    		Club club = clubService.getClubById(clubId);
+    		Board activityBoard = club.getActivityBoard();
+    		Post p = postService.getPostByClubAndBoard(clubId, activityBoard.getId(), postId);
+    		return ResponseEntity.ok(toResponse(p));
+    }
+    private PostDto.Response toResponse(Post post) {
+        PostDto.Response r = new PostDto.Response();
+        r.setId(post.getId());
+        r.setTitle(post.getTitle());
+        r.setContent(post.getContent());
+        r.setCreatedAt(post.getCreatedAt());
+        r.setThumbnail(post.getThumbnail());
+        r.setAuthorId(post.getAuthor().getId());
+        r.setBoardId(post.getBoard().getId());
+        return r;
+    }
     // Change member role
-    @PutMapping("/{clubId}/members/{accountId}/role")
+    @PutMapping("/{clubId}/members/{username}/role")
     public ResponseEntity<Void> ChangeMemberRole(
-            @PathVariable Long clubId,
-            @PathVariable Long accountId,
+            @PathVariable(name="clubId") Long clubId,
+            @PathVariable(name="username") String username,
             @Valid @RequestBody ClubMemberDto.ChangeRoleRequest req) {
 
-        clubService.changeMemberRole(clubId, accountId, req.getRole());
+        clubService.changeMemberRole(clubId, username, req.getRole());
         return ResponseEntity.ok().build();
     }
 
     // Remove member from club
-    @DeleteMapping("/{clubId}/members/{accountId}")
+    @DeleteMapping("/{clubId}/members/{username}")
     public ResponseEntity<Void> removeMember(
-            @PathVariable Long clubId,
-            @PathVariable Long accountId) {
+            @PathVariable(name="clubId") Long clubId,
+            @PathVariable(name="username") String username) {
 
-        clubService.removeMember(clubId, accountId);
+        clubService.removeMember(clubId, username);
         return ResponseEntity.noContent().build();
     }
 
     // Leave from club
     @DeleteMapping("/{clubId}/members/me")
     public ResponseEntity<Void> leaveClub(
-            @PathVariable Long clubId,
+            @PathVariable(name="clubId") Long clubId,
             Authentication authentication) {
 
         String username = authentication.getName();
@@ -169,7 +198,7 @@ public class ClubController {
     // Endpoint for creating join request
     @PostMapping("/{clubId}/join-requests")
     public ResponseEntity<List<ClubJoinRequestDto.Response>> requestToJoin(
-            @PathVariable Long clubId,
+            @PathVariable(name="clubId") Long clubId,
             @RequestBody ClubJoinRequestDto.Request dto,
             Authentication authentication) {
 
@@ -201,7 +230,7 @@ public class ClubController {
     // Endpoint for retrieving pending join requests for a club
     @GetMapping("/{clubId}/join-requests")
     public ResponseEntity<List<ClubJoinRequestDto.Response>> getPendingRequests(
-            @PathVariable Long clubId) {
+            @PathVariable(name="clubId") Long clubId) {
         List<ClubJoinRequest> requests = clubService.getPendingRequests(clubId);
         List<ClubJoinRequestDto.Response> response = requests.stream()
                 .map(this::convertToResponseDto)
@@ -212,7 +241,7 @@ public class ClubController {
     // Endpoint for join request (approve/reject)
     @PutMapping("/join-requests/{requestId}")
     public ResponseEntity<ClubJoinRequestDto.Response> processJoinRequest(
-            @PathVariable Long requestId,
+            @PathVariable(name="clubId") Long requestId,
             @RequestBody ClubJoinRequestDto.ProcessRequest processRequest) {
         ClubJoinRequest processedRequest;
         if (processRequest.getApprove()) {
@@ -222,7 +251,11 @@ public class ClubController {
         }
         return ResponseEntity.ok(convertToResponseDto(processedRequest));
     }
-
+    
+    @GetMapping("/recommend")
+    public ResponseEntity<List<ClubInfoDto>> mainRecommendClubs(@RequestParam("count") int count) {
+    		return ResponseEntity.ok(clubService.mainRecommendClubs(count));
+    }
 
     @GetMapping("/recommend/interests")
     public ResponseEntity<List<ClubInfoDto>> recommendByInterests(Authentication authentication) {
@@ -258,7 +291,7 @@ public class ClubController {
     // Endpoint for retrieving club boards
     @GetMapping("/{clubId}/boards")
     public ResponseEntity<List<BoardDto>> listBoards(
-            @PathVariable Long clubId) {
+            @PathVariable(name="clubId") Long clubId) {
 
         List<BoardDto> boards = boardService.listBoard(clubId);
         return ResponseEntity.ok(boards);

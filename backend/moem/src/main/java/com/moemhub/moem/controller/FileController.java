@@ -16,7 +16,7 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload/{clubID}")
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file, @PathVariable Long clubID) {
+    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file, @PathVariable(name="clubID") Long clubID) {
         if(file.isEmpty()){
             return ResponseEntity.badRequest().body("file is empty");
         }
@@ -30,8 +30,7 @@ public class FileController {
     }
 
     @GetMapping("/download/{clubID}/{fileName}")
-    public ResponseEntity<Resource> download(@PathVariable Long clubID, @PathVariable String fileName) throws IOException {
-        System.out.println("come here");
+    public ResponseEntity<Resource> download(@PathVariable(name="clubID") Long clubID, @PathVariable(name="fileName") String fileName) throws IOException {
         try{
             Resource resource = fileService.download(clubID, fileName);
             if(resource == null){
@@ -58,8 +57,7 @@ public class FileController {
         }
     }
     @GetMapping("/download/profile/{fileName}")
-    public ResponseEntity<Resource> downloadProfile(@PathVariable String fileName) throws IOException {
-        System.out.println("come here");
+    public ResponseEntity<Resource> downloadProfile(@PathVariable(name="fileName") String fileName) throws IOException {
         try{
             Resource resource = fileService.downloadProfile(fileName);
             if(resource == null){
@@ -70,5 +68,9 @@ public class FileController {
         catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+    @GetMapping("/download/{clubID}/activity/{fileName}")
+    public ResponseEntity<Resource> downloadActivityImage(@PathVariable(name="clubID") Long clubID, @PathVariable(name="fileName") String fileName) throws IOException {
+    		return download(clubID, fileName);
     }
 }

@@ -1,42 +1,38 @@
-import { Link } from "react-router-dom";
-function PostCard({ id, title, content, author = "aaa", comments = 3 }) {
-  return (
-    <Link
-      to={`/post/${id}`}
-      style={{ textDecoration: "none", color: "inherit" }}
-    >
-      <div
-        style={{
-          padding: "20px",
-          border: "1px solid #ddd",
-          borderRadius: "10px",
-          backgroundColor: "#fff",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "8px",
-        }}
-      >
-        <h2 style={{ fontSize: "18px", fontWeight: "bold", margin: 0 }}>
-          {title}
-        </h2>
-        <p style={{ color: "#555", margin: 0 }}>{content}</p>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            fontSize: "14px",
-            color: "#888",
-          }}
-        >
-          <span>👤 {author}</span>
-          <div style={{ display: "flex", gap: "16px" }}>
-            <span>💬 {comments}</span>
-          </div>
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { apiClient } from '../api/ApiClient';
+import { CLUB_API } from '../api/ClubApi';
+import { fetchActivityImage } from '../services/FileService';
+import styles from './PostCard.module.css'
+
+function PostCard({clubId, post}){
+    const [imgUrl, setImgUrl] = useState("/images/image_none.jpg");
+    useEffect(() => {
+        if(post.thumbnail){
+            fetchActivityImage(clubId, post.thumbnail)
+                .then(url => {
+                    if(url) setImgUrl(url);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+    }, [clubId]);
+
+
+    return (
+        <div>
+            <Link to={`/club/${clubId}/activity/${post.postID}`} className={styles.card}>
+                <img src={imgUrl} alt="Thumbnail" className={styles.thumbnail}/>
+                <div className={styles.title}>
+                    {post.title}
+                </div>
+                <div>
+                    {post.createdAt}
+                </div>
+            </Link>
         </div>
-      </div>
-    </Link>
-  );
+    );
 }
 
 export default PostCard;

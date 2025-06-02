@@ -13,7 +13,6 @@ public class ClubCreateDto {
     private String description;
     @NotBlank(message = "Enter Club Topic")
     private String topic;
-    private String profileImageName;
     private String region;
     private String applicationPrecautions;
 }

@@ -1,18 +1,17 @@
 import { apiClient } from '../api/ApiClient';
-import { fetchPostHtml } from '../services/PostService';
+import { fetchActivityPostHtml } from '../services/PostService';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import styles from './Post.module.css'
+import styles from './ActivityPost.module.css'
 
 //post {id, title, content}
 
-function Post(){
-    const {clubId, boardId, postId} = useParams();
+function ActivityPost(){
+    const {clubId, postId} = useParams();
     const [content, setContent] = useState(null);
-    
     useEffect(() => {
         (async () => {
-            const post = await fetchPostHtml(clubId, boardId, postId);
+            const post = await fetchActivityPostHtml(clubId, postId);
             setContent(post);
             //console.log(post);
         })();
@@ -34,4 +33,4 @@ function Post(){
     );
 }
 
-export default Post;
+export default ActivityPost;

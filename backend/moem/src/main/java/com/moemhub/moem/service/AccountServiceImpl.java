@@ -78,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void addGuardian(String wardUsername, String guardianUsername) {
+    public AccountInfoDto addGuardian(String wardUsername, String guardianUsername) {
         Account ward = accountRepository.findByUsername(wardUsername)
                 .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardUsername));
         Account guardian = accountRepository.findByUsername(guardianUsername)
@@ -86,7 +86,20 @@ public class AccountServiceImpl implements AccountService {
 
         ward.getGuardians().add(guardian);
         guardian.getWards().add(ward);
-        accountRepository.save(ward);
+        return toDto(accountRepository.save(guardian));
+        
+    }
+    @Override
+    public AccountInfoDto addWard(String guardianUsername, String wardUsername) {
+        Account ward = accountRepository.findByUsername(wardUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardUsername));
+        Account guardian = accountRepository.findByUsername(guardianUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianUsername));
+
+        ward.getGuardians().add(guardian);
+        guardian.getWards().add(ward);
+        return toDto(accountRepository.save(ward));
+        
     }
 
     @Override
@@ -104,18 +117,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Account> getGuardians(String wardUsername) {
+    public List<AccountInfoDto> getGuardians(String wardUsername) {
         Account ward = accountRepository.findByUsername(wardUsername)
                 .orElseThrow(() -> new EntityNotFoundException("Ward not found: " + wardUsername));
-        return List.copyOf(ward.getGuardians());
+        return List.copyOf(ward.getGuardians()).stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Account> getWards(String guardianUsername) {
+    public List<AccountInfoDto> getWards(String guardianUsername) {
         Account guardian = accountRepository.findByUsername(guardianUsername)
                 .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianUsername));
-        return List.copyOf(guardian.getWards());
+        return List.copyOf(guardian.getWards()).stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -159,5 +172,17 @@ public class AccountServiceImpl implements AccountService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+    private AccountInfoDto toDto(Account account) {
+	    	return AccountInfoDto.builder()
+	                .id(account.getId())
+	                .username(account.getUsername())
+	                .name(account.getName())
+	                .profileImage(account.getProfileImage())
+	                .age(account.getAge())
+	                .gender(account.getGender())
+	                .region(account.getRegion())
+	                .interests(account.getInterests())
+	                .build();
     }
 }
