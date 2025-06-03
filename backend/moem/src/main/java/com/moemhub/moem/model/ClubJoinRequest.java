@@ -1,5 +1,7 @@
 package com.moemhub.moem.model;
 
+import java.util.*;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,8 +25,17 @@ public class ClubJoinRequest {
 
     // Relationship to Account entity(applicant)
     @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    @JoinColumn(name = "submitter", nullable = false)
+    private Account submitter;
+    
+    @ManyToMany
+    @JoinTable(
+    		name="join_request_ward",
+    		joinColumns = @JoinColumn(name="ward_id"),
+    		inverseJoinColumns = @JoinColumn(name="req_id"))
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @Builder.Default
+    private Set<Account> wards = new HashSet<>();
 
     // Message provided by applicant for join request
     @Column(length = 500)

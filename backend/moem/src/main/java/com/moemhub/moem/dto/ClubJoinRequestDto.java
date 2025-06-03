@@ -2,7 +2,11 @@ package com.moemhub.moem.dto;
 
 import lombok.Data;
 
+
 import java.util.List;
+
+import com.moemhub.moem.model.ClubJoinRequest;
+
 
 public class ClubJoinRequestDto {
 
@@ -26,9 +30,23 @@ public class ClubJoinRequestDto {
         private Long id;
         private Long clubId;
         private String clubName;
-        private String username;
+        private AccountInfoDto submitter;
+        private List<AccountInfoDto> wards;
         private String message;
         private String status;
         private String responseMessage;
+        
+        public static ClubJoinRequestDto.Response toDto(ClubJoinRequest req){
+        		ClubJoinRequestDto.Response res = new ClubJoinRequestDto.Response();
+        		res.setId(req.getId());
+        		res.setClubId(req.getClub().getId());
+        		res.setClubName(req.getClub().getName());
+        		res.setSubmitter(AccountInfoDto.toDto(req.getSubmitter()));
+        		res.setWards(req.getWards().stream().map(AccountInfoDto::toDto).toList());
+        		res.setMessage(req.getMessage());
+        		res.setStatus(req.getStatus().toString());
+        		res.setResponseMessage(req.getResponseMessage());
+        		return res;
+        }
     }
 }

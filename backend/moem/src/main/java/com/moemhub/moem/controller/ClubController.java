@@ -69,6 +69,8 @@ public class ClubController {
                 .name(created.getName())
                 .description(created.getDescription())
                 .topic(created.getTopic())
+                .region(created.getRegion())
+                .applicationPrecautions(created.getApplicationPrecautions())
                 .profileImageName(created.getProfileImageName())
                 .noticeBoardId(created.getNoticeBoard().getId())
                 .activityBoardId(created.getActivityBoard().getId())
@@ -82,23 +84,16 @@ public class ClubController {
     public ResponseEntity<ClubInfoDto> updateClub(
             @PathVariable(name="clubId") Long clubId,
             @Valid @RequestBody ClubUpdateDto req) {
-
-        Club toUpdate = Club.builder()
-                .name(req.getName())
-                .description(req.getDescription())
-                .topic(req.getTopic())
-                .profileImageName(req.getProfileImageName())
-                .region(req.getRegion())
-                .applicationPrecautions(req.getApplicationPrecautions())
-                .build();
-
-        Club updated = clubService.updateClub(clubId, toUpdate);
+    		
+        Club updated = clubService.updateClub(clubId, req);
 
         ClubInfoDto resp = ClubInfoDto.builder()
                 .id(updated.getId())
                 .name(updated.getName())
                 .description(updated.getDescription())
                 .topic(updated.getTopic())
+                .region(updated.getRegion())
+                .applicationPrecautions(updated.getApplicationPrecautions())
                 .profileImageName(updated.getProfileImageName())
                 .noticeBoardId(updated.getNoticeBoard().getId())
                 .activityBoardId(updated.getActivityBoard().getId())
@@ -123,6 +118,8 @@ public class ClubController {
                 .name(club.getName())
                 .description(club.getDescription())
                 .topic(club.getTopic())
+                .region(club.getRegion())
+                .applicationPrecautions(club.getApplicationPrecautions())
                 .profileImageName(club.getProfileImageName())
                 .noticeBoardId(club.getNoticeBoard().getId())
                 .activityBoardId(club.getActivityBoard().getId())
@@ -197,7 +194,7 @@ public class ClubController {
 
     // Endpoint for creating join request
     @PostMapping("/{clubId}/join-requests")
-    public ResponseEntity<List<ClubJoinRequestDto.Response>> requestToJoin(
+    public ResponseEntity<ClubJoinRequestDto.Response> requestToJoin(
             @PathVariable(name="clubId") Long clubId,
             @RequestBody ClubJoinRequestDto.Request dto,
             Authentication authentication) {
@@ -206,34 +203,20 @@ public class ClubController {
         List<String> targetUsernames = dto.getUsernames();
         String message = dto.getMessage();
 
-        List<ClubJoinRequest> requests =
+        ClubJoinRequest request =
                 clubService.requestToJoin(clubId, requesterUsername, targetUsernames, message);
 
-        List<ClubJoinRequestDto.Response> response = requests.stream()
-                .map(req -> {
-                    ClubJoinRequestDto.Response r = new ClubJoinRequestDto.Response();
-                    r.setId(req.getId());
-                    r.setClubId(req.getClub().getId());
-                    r.setClubName(req.getClub().getName());
-                    r.setUsername(req.getAccount().getUsername());
-                    r.setMessage(req.getMessage());
-                    r.setStatus(req.getStatus().name());
-                    r.setResponseMessage(req.getResponseMessage());
-                    return r;
-                })
-                .toList();
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ClubJoinRequestDto.Response.toDto(request));
     }
 
 
     // Endpoint for retrieving pending join requests for a club
     @GetMapping("/{clubId}/join-requests")
-    public ResponseEntity<List<ClubJoinRequestDto.Response>> getPendingRequests(
+    public ResponseEntity<List<ClubJoinRequestDto.Response>> getRequests(
             @PathVariable(name="clubId") Long clubId) {
-        List<ClubJoinRequest> requests = clubService.getPendingRequests(clubId);
+        List<ClubJoinRequest> requests = clubService.getRequests(clubId);
         List<ClubJoinRequestDto.Response> response = requests.stream()
-                .map(this::convertToResponseDto)
+                .map(ClubJoinRequestDto.Response::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(response);
     }
@@ -241,7 +224,7 @@ public class ClubController {
     // Endpoint for join request (approve/reject)
     @PutMapping("/join-requests/{requestId}")
     public ResponseEntity<ClubJoinRequestDto.Response> processJoinRequest(
-            @PathVariable(name="clubId") Long requestId,
+            @PathVariable(name="requestId") Long requestId,
             @RequestBody ClubJoinRequestDto.ProcessRequest processRequest) {
         ClubJoinRequest processedRequest;
         if (processRequest.getApprove()) {
@@ -249,7 +232,7 @@ public class ClubController {
         } else {
             processedRequest = clubService.rejectJoinRequest(requestId, processRequest.getResponseMessage());
         }
-        return ResponseEntity.ok(convertToResponseDto(processedRequest));
+        return ResponseEntity.ok(ClubJoinRequestDto.Response.toDto(processedRequest));
     }
     
     @GetMapping("/recommend")
@@ -295,18 +278,5 @@ public class ClubController {
 
         List<BoardDto> boards = boardService.listBoard(clubId);
         return ResponseEntity.ok(boards);
-    }
-
-    // Convert ClubJoinRequest entity to DTO response form
-    private ClubJoinRequestDto.Response convertToResponseDto(ClubJoinRequest request) {
-        ClubJoinRequestDto.Response dto = new ClubJoinRequestDto.Response();
-        dto.setId(request.getId());
-        dto.setClubId(request.getClub().getId());
-        dto.setClubName(request.getClub().getName());
-        dto.setUsername(request.getAccount().getUsername());
-        dto.setMessage(request.getMessage());
-        dto.setStatus(request.getStatus().name());
-        dto.setResponseMessage(request.getResponseMessage());
-        return dto;
     }
 }

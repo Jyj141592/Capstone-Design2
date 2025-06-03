@@ -1,6 +1,7 @@
 package com.moemhub.moem.service;
 
 import com.moemhub.moem.dto.ClubInfoDto;
+import com.moemhub.moem.dto.ClubUpdateDto;
 import com.moemhub.moem.dto.ClubCreateDto;
 import com.moemhub.moem.model.Account;
 import com.moemhub.moem.model.Club;
@@ -16,7 +17,7 @@ public interface ClubService {
     Club createClub(ClubCreateDto club, MultipartFile profile, Account owner);
 
     // Update existing club information
-    Club updateClub(Long clubId, Club club);
+    Club updateClub(Long clubId, ClubUpdateDto club);
 
     // Delete club by its ID
     void deleteClub(Long clubId);
@@ -37,10 +38,10 @@ public interface ClubService {
     void leaveClub(Long clubId, Long accountId);
 
     // Create join request with given message
-    List<ClubJoinRequest> requestToJoin(Long clubId, String requesterUsername, List<String> targetUsernames, String message);
+    ClubJoinRequest requestToJoin(Long clubId, String requesterUsername, List<String> targetUsernames, String message);
 
     // Retrieve all join requests pending for club
-    List<ClubJoinRequest> getPendingRequests(Long clubId);
+    List<ClubJoinRequest> getRequests(Long clubId);
 
     // Retrieve join request by request ID
     ClubJoinRequest getJoinRequest(Long requestId);

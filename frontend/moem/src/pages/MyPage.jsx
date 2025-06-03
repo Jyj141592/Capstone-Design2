@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchProfileImageUrl } from "../services/FileService";
 import WardModal from "../components/WardModal";
 import ProfileList from "../components/ProfileList";
+import JoinRequestList from "../components/JoinRequestList";
 
 export default function MyPage() {
   const fileInputRef = useRef();
@@ -22,6 +23,7 @@ export default function MyPage() {
   const [myClubs, setMyClubs] = useState([]);
   const [guardians, setGuardians] = useState([]);
   const [proteges, setProteges] = useState([]);
+  const [joinRequest, setJoinRequest] = useState([]);
 
   const [showClubModal, setShowClubModal] = useState(false);
   const [showGuardianModal, setShowGuardianModal] = useState(false);
@@ -40,13 +42,15 @@ export default function MyPage() {
 
   useEffect(()=>{
     if(profile){
-      fetchProfileImageUrl(profile.profileImage)
-        .then(url=> {
-          if(url){
-            setPreviewAvatar(url);
-          }
-        })
-        .catch(err=>console.error(err));
+      if(profile.profileImage){
+        fetchProfileImageUrl(profile.profileImage)
+          .then(url=> {
+            if(url){
+              setPreviewAvatar(url);
+            }
+          })
+          .catch(err=>console.error(err));
+      }
       apiClient
         .get(ACCOUNT_API.GET_GUARDIANS(authContext.username))
         .then((res) => setGuardians(res.data))
@@ -60,6 +64,10 @@ export default function MyPage() {
         .get(ACCOUNT_API.MY_CLUBS)
         .then((res) => setMyClubs(res.data))
         .catch((err) => console.error("내 동아리 로딩 실패", err));
+      apiClient
+        .get(ACCOUNT_API.JOIN_REQUESTS)
+        .then(res=>setJoinRequest(res.data))
+        .catch(err=>console.error(err));
     }
   }, [profile])
 
@@ -156,7 +164,6 @@ export default function MyPage() {
                 {profile.interests.join(", ")}
               </span>
             </p>
-            <button className={styles.btnWithdraw}>회원 탈퇴</button>
           </div>
         </div>
       </section>
@@ -253,6 +260,12 @@ export default function MyPage() {
             onChanged={setProteges}  
           />
         )}
+      </section>
+      <section>
+        <div className={styles.sectionHeader}>
+          <h2>신청 내역</h2>
+        </div>
+        <JoinRequestList requests={joinRequest}/>
       </section>
     </main>
   );

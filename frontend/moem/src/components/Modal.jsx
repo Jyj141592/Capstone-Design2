@@ -6,7 +6,9 @@ function Modal({children, onClose}) {
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent} onClick={(e)=>e.stopPropagation()}>
                 <button className={styles.closeButton} onClick={onClose}>x</button>
-                {children}
+                <div className={styles.modalBody}>    
+                    {children}
+                </div>
             </div>
         </div>
     )

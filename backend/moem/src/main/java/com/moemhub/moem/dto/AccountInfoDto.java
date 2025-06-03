@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+import com.moemhub.moem.model.Account;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,4 +24,17 @@ public class AccountInfoDto {
     private String gender;
     private String region;
     private List<String> interests;
+    
+    public static AccountInfoDto toDto(Account account) {
+	    	return AccountInfoDto.builder()
+	                .id(account.getId())
+	                .username(account.getUsername())
+	                .name(account.getName())
+	                .profileImage(account.getProfileImage())
+	                .age(account.getAge())
+	                .gender(account.getGender())
+	                .region(account.getRegion())
+	                .interests(account.getInterests())
+	                .build();	
+    }
 }

@@ -40,7 +40,7 @@ function ClubLayout(){
 
     return clubInfo && privilege && (
         <div className = {styles.layout}>
-            <ClubSideMenu clubInfo={clubInfo}/>
+            <ClubSideMenu clubInfo={clubInfo} privilege={privilege}/>
             <div className={styles.content}>
                 <Outlet context={{clubInfo,privilege}}/>
             </div>

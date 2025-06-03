@@ -12,7 +12,7 @@ import SelectPerson from "../components/SelectPerson";
 function ClubRegister() {
   const [searchParams] = useSearchParams();
   const clubId = searchParams.get("clubId");
-  const [joinInfo, setJoinInfo] = useState(null);
+  const [joinInfo, setJoinInfo] = useState({precaution: ''});
   const [protegeList, setProtegeList] = useState([]);
   const [error, setError] = useState("");
   const [selectedList, setSelectedList] = useState([]);
@@ -31,7 +31,7 @@ function ClubRegister() {
       .catch(err=>console.error(err));
   }, [clubId]);
 
-  function OnSelectionChange(selected, person){
+  function OnSelectionChange(person, selected){
     if (selected){
       const included = selectedList.includes(person.username);
       if (!included) {
@@ -53,8 +53,14 @@ function ClubRegister() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    
-    alert("신청이 완료되었습니다.");
+    const req = {message: message, usernames: selectedList};
+
+    apiClient.post(CLUB_API.CLUB_JOIN(clubId), req)
+      .then(res=>{
+        alert("신청이 완료되었습니다.");
+        navigate(-1);
+      })
+      .catch(err=>console.error(err));
   };
 
   return (
@@ -78,6 +84,7 @@ function ClubRegister() {
         <label htmlFor="message">
           가입 인사
           <textarea
+            className={styles.textarea}
             id="message"
             name="message"
             value={message}

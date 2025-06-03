@@ -159,18 +159,8 @@ public class AccountServiceImpl implements AccountService {
         Account me = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found: " + username));
 
-        return joinRequestRepository.findByAccount(me).stream()
-                .map(request -> {
-                    ClubJoinRequestDto.Response dto = new ClubJoinRequestDto.Response();
-                    dto.setId(request.getId());
-                    dto.setClubId(request.getClub().getId());
-                    dto.setClubName(request.getClub().getName());
-                    dto.setUsername(request.getAccount().getUsername());
-                    dto.setMessage(request.getMessage());
-                    dto.setStatus(request.getStatus().name());
-                    dto.setResponseMessage(request.getResponseMessage());
-                    return dto;
-                })
+        return joinRequestRepository.findBySubmitterOrderByIdDesc(me).stream()
+                .map(ClubJoinRequestDto.Response::toDto)
                 .collect(Collectors.toList());
     }
     private AccountInfoDto toDto(Account account) {

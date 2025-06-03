@@ -1,13 +1,14 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../../api/ApiClient';
 import { CLUB_API } from '../../api/ClubApi';
 import { fetchProfileImageUrl } from '../../services/FileService';
 import styles from './ClubSideMenu.module.css'
 
-function ClubSideMenu({clubInfo}) {
+function ClubSideMenu({clubInfo, privilege}) {
     const [imgUrl, setImgUrl] = useState("/images/image_none.jpg");
     const [boards, setBoards] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         if(clubInfo.profileImageName){
             fetchProfileImageUrl(clubInfo.profileImageName)
@@ -37,6 +38,9 @@ function ClubSideMenu({clubInfo}) {
                 </div>
                 <h2 className={styles.name}>{clubInfo.name}</h2>
                 <div className={styles.description}>{clubInfo.description}</div>
+                {(privilege === 'OWNER' || privilege === 'ADMIN') &&
+                    <button className={styles.manageButton} onClick={()=>navigate(`/club/${clubInfo.id}/manage`)}>관리</button>
+                }           
             </div>
             <div className={styles.boardSection}>
                 <ul className={styles.boardList}>

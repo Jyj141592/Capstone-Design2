@@ -10,9 +10,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class BoardDto {
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     private String name;
     private String description;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long count;
     
     public BoardDto(Board board) {

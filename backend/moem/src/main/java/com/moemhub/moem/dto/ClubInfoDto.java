@@ -12,6 +12,8 @@ public class ClubInfoDto {
     private String description;
     private String topic;
     private String profileImageName;
+    private String region;
+    private String applicationPrecautions;
     private Long noticeBoardId;
     private Long activityBoardId;
 }

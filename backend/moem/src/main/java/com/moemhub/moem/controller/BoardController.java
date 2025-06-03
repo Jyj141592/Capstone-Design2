@@ -20,7 +20,7 @@ public class BoardController {
         if(response != null) return ResponseEntity.ok(response);
         return ResponseEntity.internalServerError().build();
     }
-    @PostMapping("/update/{clubID}/{boardID}")
+    @PutMapping("/update/{clubID}/{boardID}")
     public ResponseEntity<BoardDto> updateBoard(@PathVariable(name="clubID") Long clubID, @PathVariable(name="boardID") Long boardID, @RequestBody BoardDto boardDto) {
         BoardDto response = boardService.updateBoard(clubID, boardID, boardDto);
         if (response != null) return ResponseEntity.ok(response);

@@ -1,6 +1,7 @@
 package com.moemhub.moem.service;
 
 import com.moemhub.moem.dto.ClubInfoDto;
+import com.moemhub.moem.dto.ClubUpdateDto;
 import com.moemhub.moem.dto.ClubCreateDto;
 import com.moemhub.moem.model.Board;
 import com.moemhub.moem.model.Club;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,7 +82,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public Club updateClub(Long clubId, Club updatedClub) {
+    public Club updateClub(Long clubId, ClubUpdateDto updatedClub) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new EntityNotFoundException("Club not found: " + clubId));
 
@@ -168,7 +170,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public List<ClubJoinRequest> requestToJoin(
+    public ClubJoinRequest requestToJoin(
             Long clubId,
             String requesterUsername,
             List<String> targetUsernames,
@@ -180,52 +182,35 @@ public class ClubServiceImpl implements ClubService {
         Account requester = accountRepository.findByUsername(requesterUsername)
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + requesterUsername));
 
-        List<ClubJoinRequest> results = new ArrayList<>();
-
-        for (String targetU : targetUsernames) {
-            Account target = accountRepository.findByUsername(targetU)
-                    .orElseThrow(() -> new EntityNotFoundException("User not found: " + targetU));
-
-            boolean isMember = clubMemberRepository
-                    .findByClubAndAccount(club, target)
-                    .isPresent();
-            if (isMember) {
-                throw new IllegalStateException(
-                        targetU + " is already a member of club " + clubId);
-            }
-
-            boolean pendingExists = joinRequestRepository
-                    .existsByClubAndAccountAndStatus(
-                            club, target, ClubJoinRequest.RequestStatus.PENDING);
-            if (pendingExists) {
-                throw new IllegalStateException(
-                        targetU + " already has a pending request for club " + clubId);
-            }
-
-            if (!requester.equals(target)) {
+        ClubJoinRequest req = new ClubJoinRequest();
+        HashSet<Account> wards = new HashSet<>();
+        
+        for (String ward : targetUsernames) {
+        		Account target = accountRepository.findByUsername(ward)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found: " + ward));
+        		if (!requester.equals(target)) {
                 if (!target.getGuardians().contains(requester)) {
                     throw new IllegalStateException(
-                            requesterUsername + " cannot request for " + targetU);
+                            requesterUsername + " cannot request for " + ward);
                 }
             }
-
-            ClubJoinRequest req = ClubJoinRequest.builder()
-                    .club(club)
-                    .account(target)
-                    .message(message != null ? message : "")
-                    .status(ClubJoinRequest.RequestStatus.PENDING)
-                    .build();
-            results.add(joinRequestRepository.save(req));
+        		wards.add(target);
         }
-
-        return results;
+        
+        req.setClub(club);
+        req.setSubmitter(requester);
+        req.setStatus(ClubJoinRequest.RequestStatus.PENDING);
+        req.setMessage(message != null ? message : "");
+        req.setWards(wards);
+        
+        return joinRequestRepository.save(req);
     }
 
     @Override
-    public List<ClubJoinRequest> getPendingRequests(Long clubId) {
+    public List<ClubJoinRequest> getRequests(Long clubId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new EntityNotFoundException("Club not found: " + clubId));
-        return joinRequestRepository.findByClubAndStatus(club, ClubJoinRequest.RequestStatus.PENDING);
+        return joinRequestRepository.findByClubOrderByIdDesc(club);
     }
 
     @Override
@@ -242,15 +227,25 @@ public class ClubServiceImpl implements ClubService {
             throw new IllegalStateException("Join request " + requestId + " is not pending");
         }
         request.setStatus(ClubJoinRequest.RequestStatus.APPROVED);
-        request.setResponseMessage(responseMessage);
+        request.setResponseMessage(responseMessage != null ? responseMessage : "");
 
-        if (clubMemberRepository.findByClubAndAccount(request.getClub(), request.getAccount()).isEmpty()) {
+        if (clubMemberRepository.findByClubAndAccount(request.getClub(), request.getSubmitter()).isEmpty()) {
             ClubMember member = ClubMember.builder()
                     .club(request.getClub())
-                    .account(request.getAccount())
+                    .account(request.getSubmitter())
                     .role(ClubMember.Role.MEMBER)
                     .build();
             clubMemberRepository.save(member);
+        }
+        for (Account ward : request.getWards()) {
+        		if (clubMemberRepository.findByClubAndAccount(request.getClub(), ward).isEmpty()) {
+                ClubMember member = ClubMember.builder()
+                        .club(request.getClub())
+                        .account(ward)
+                        .role(ClubMember.Role.MEMBER)
+                        .build();
+                clubMemberRepository.save(member);
+            }
         }
         return joinRequestRepository.save(request);
     }
@@ -263,7 +258,7 @@ public class ClubServiceImpl implements ClubService {
             throw new IllegalStateException("Join request " + requestId + " is not pending");
         }
         request.setStatus(ClubJoinRequest.RequestStatus.REJECTED);
-        request.setResponseMessage(responseMessage);
+        request.setResponseMessage(responseMessage != null ? responseMessage : "");
         return joinRequestRepository.save(request);
     }
     
@@ -342,6 +337,8 @@ public class ClubServiceImpl implements ClubService {
                 .name(club.getName())
                 .description(club.getDescription())
                 .topic(club.getTopic())
+                .region(club.getRegion())
+                .applicationPrecautions(club.getApplicationPrecautions())
                 .profileImageName(club.getProfileImageName())
                 .noticeBoardId(club.getNoticeBoard().getId())
                 .activityBoardId(club.getActivityBoard().getId())

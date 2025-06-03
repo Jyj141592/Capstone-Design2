@@ -27,7 +27,7 @@ function SelectPerson({person, OnClick}) {
             }}
         >
             <img src={profile} alt="프로필 이미지" />
-            <span>{p.name}</span>
+            <span>{person.name}</span>
         </div>
     )
 }
