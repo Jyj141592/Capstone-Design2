@@ -29,6 +29,8 @@
   .name {
     font-size: 25px;
     color: #333;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #afa3a3;
   }
   
   .description {
@@ -80,7 +82,7 @@
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-.manageButton {
+/* .manageButton {
   margin-top: 20px;
   width: 120px;
   padding: 10px 0;
@@ -90,10 +92,53 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  background-color: #4CAF50; /* 초록 */
+  background-color: #629c62;
+  color: white;
+} */
+
+.manageButton {
+  margin-top: 2px;
+  width: 100%;
+  padding: 10px 0;
+  background-color: #629c62;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 3px;
   color: white;
 }
 
 .manageButton:hover {
   background-color: #1f5621;
+}
+
+.buttonGroupWrapper {
+  width: 100%;
+}
+
+.buttonGroup {
+  display: flex;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.navButton {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  background-color:#629c62;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 3px;
+  color: white;
+}
+
+.navButton:hover{
+  background-color: #1f5621;
+  
+}
+
+.navButton:first-child {
+  border-right: 1px solid #ccc;
 }
