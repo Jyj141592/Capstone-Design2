@@ -1,0 +1,232 @@
+.container {
+  padding: 32px;
+  max-width: 720px;
+  margin: 0 auto;
+  border-radius: 12px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #1f2937;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.date {
+  color: #2563eb;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.description {
+  font-size: 18px;
+  color: #374151;
+  margin-bottom: 24px;
+}
+
+/* 신청자 목록 */
+.applicantSection h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.applicantSection ul {
+  list-style: disc;
+  padding-left: 24px;
+  margin-bottom: 24px;
+  font-size: 16px;
+  color: #4b5563;
+}
+
+/* -------------------- 버튼 -------------------- */
+
+.writeButton,
+.applyButton,
+.backButton,
+.attendButton,
+.modalButtons button,
+.commentForm button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.writeButton,
+.applyButton {
+  background-color: #2563eb;
+  color: white;
+}
+
+.writeButton:hover,
+.applyButton:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.backButton {
+  background-color: #e5e7eb;
+  color: #454545;
+}
+
+.backButton:hover {
+  background-color: #d1d5db;
+}
+
+.attendButton {
+  background-color: #10b981;
+  color: white;
+}
+
+.attendButton:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+}
+
+/* -------------------- modal -------------------- */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding-top: 100px;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 28px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modalContent h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.modalContent label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #374151;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.modalContent input[type="checkbox"] {
+  transform: scale(1.2);
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+/* -------------------- 코멘트 폼 -------------------- */
+
+.commentForm {
+  margin-top: 24px;
+}
+
+.commentForm label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.commentForm textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #f9fafb;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.commentForm textarea:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.commentForm button {
+  background-color: #2563eb;
+  color: white;
+}
+
+.commentForm button:hover {
+  background-color: #1e40af;
+}
+
+/* -------------------- 코멘트 -------------------- */
+
+.commentCard {
+  background-color: #f3f4f6;
+  border-left: 5px solid #2563eb;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 24px;
+}
+
+.commentCard h3 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.commentCard p {
+  font-size: 16px;
+  color: #374151;
+}
+
+/* -------------------- modal 내부 버튼 -------------------- */
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modalButtons button[type="submit"],
+.modalButtons .submitButton {
+  background-color: #2563eb;
+  color: white;
+}
+
+.modalButtons button[type="submit"]:hover,
+.modalButtons .submitButton:hover {
+  background-color: #1e3a8a;
+}
+
+.modalButtons button[type="button"],
+.modalButtons .cancelButton {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.modalButtons button[type="button"]:hover,
+.modalButtons .cancelButton:hover {
+  background-color: #d1d5db;
+}

@@ -15,6 +15,10 @@ import ClubBoard from "./pages/ClubBoard";
 import Post from "./pages/Post";
 import WritePost from "./pages/WritePost";
 import ClubManager from "./pages/ClubManager";
+import ClubCalendar from "./pages/ClubCalendar";
+import ClubActivityDetail from "./pages/ClubActivityDetail";
+import ClubActivityWrite from "./pages/ClubActivityWrite";
+import ClubMyPage from "./pages/ClubMyPage";
 
 function App() {
   return (
@@ -36,6 +40,13 @@ function App() {
             <Route path=":clubId" element={<ClubMain />} />
             <Route path=":clubId/manage" element={<ClubManager />} />
             <Route path=":clubId/:boardId" element={<ClubBoard />} />
+            <Route path=":clubId/calendar" element={<ClubCalendar />} />
+            <Route path=":clubId/act/:actId" element={<ClubActivityDetail />} />
+            <Route
+              path=":clubId/act/:actId/write"
+              element={<ClubActivityWrite />}
+            />
+            <Route path=":clubId/mypage" element={<ClubMyPage />} />
             <Route path=":clubId/:boardId/write" element={<WritePost />} />
             <Route path=":clubId/:boardId/:postId" element={<Post />} />
           </Route>
