@@ -264,9 +264,9 @@ public class ClubController {
 
     @GetMapping("/search")
     public ResponseEntity<List<ClubInfoDto>> searchClubs(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) List<String> topics,
-            @RequestParam(required = false) String region) {
+            @RequestParam(name="name", required = false) String name,
+            @RequestParam(name="topic",required = false) List<String> topics,
+            @RequestParam(name="region",required = false) String region) {
         List<ClubInfoDto> clubs = clubService.searchClubs(name, topics, region);
         return ResponseEntity.ok(clubs);
     }

@@ -35,6 +35,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/mypage" element={<PrivateRoute> <MyPage /> </PrivateRoute>} />
+            <Route path="/myactivity" element={<PrivateRoute> <ClubMyPage /> </PrivateRoute>} />
             <Route path="/exploreclub" element={<ExploreClub />} />
             <Route path="/club/register" element={<PrivateRoute> <ClubRegister /> </PrivateRoute>} />
             <Route path="/club/:clubId/info" element={<ClubInfo />} />
@@ -50,7 +51,6 @@ function App() {
                 path=":clubId/act/:actId/write"
                 element={<ClubActivityWrite />}
               />
-              <Route path=":clubId/mypage" element={<ClubMyPage />} />
               <Route path=":clubId/:boardId/write" element={<WritePost />} />
               <Route path=":clubId/:boardId/:postId" element={<Post />} />
             </Route>

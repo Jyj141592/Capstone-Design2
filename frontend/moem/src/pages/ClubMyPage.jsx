@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { apiClient } from "../api/ApiClient";
+import { ACCOUNT_API } from "../api/AccountApi";
 import styles from "./ClubMyPage.module.css";
+import MyActivity from "../components/MyActivity";
+import WardActivity from "../components/WardActivity";
 
 // 내 활동
 const myActivities = [
@@ -60,6 +64,15 @@ export default function ClubMyPage() {
 
   const list = tab === "my" ? myList : protegeList;
 
+  useEffect(()=>{
+    // apiClient.get(ACCOUNT_API.FETCH_MY_ACTIVITIES)
+    //   .then(res=>setMyList(res.data))
+    //   .catch(err=>console.error(err));
+    // apiClient.get(ACCOUNT_API.FETCH_WARD_ACTIVITIES)
+    //   .then(res=>setProtegeList(res.data))
+    //   .catch(err=>console.error(err));
+  },[]);
+
   // 출석 처리
   const handleAttend = () => {
     const updateList = (prevList) =>
@@ -106,102 +119,10 @@ export default function ClubMyPage() {
           피보호자 활동
         </button>
       </div>
-
-      {/* 활동 목록 */}
-      <div className={styles.listWrapper}>
-        {list.map((item) => (
-          <div
-            key={item.id}
-            className={styles.card}
-            onClick={() => setSelectedActivity(item)}
-          >
-            <div className={styles.cardHeader}>
-              <h3 className={styles.cardTitle}>{item.title}</h3>
-              <span className={styles.cardDate}>📅 {item.date}</span>
-            </div>
-            <div className={styles.cardInfo}>
-              {item.protegeName && (
-                <p className={styles.protegeName}>{item.protegeName}</p>
-              )}
-              <p>
-                {item.attended ? "✔ 출석" : "❌ 미출석"} ·{" "}
-                {item.commented ? "📝 작성됨" : "작성 필요"}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* 활동 상세 모달 */}
-      {selectedActivity && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h2>{selectedActivity.title}</h2>
-            <p>📅 {selectedActivity.date}</p>
-            {selectedActivity.protegeName && (
-              <p>👤 {selectedActivity.protegeName}</p>
-            )}
-            <p>{selectedActivity.attended ? "✔ 출석 완료" : "❌ 출석 안 함"}</p>
-
-            {/* 코멘트 O */}
-            {selectedActivity.attended && selectedActivity.commented && (
-              <div className={styles.commentBox}>
-                <h4>작성한 코멘트</h4>
-                <p>{selectedActivity.comment}</p>
-              </div>
-            )}
-
-            {/* 출석 O 코멘트 X */}
-            {selectedActivity.attended &&
-              !selectedActivity.commented &&
-              selectedActivity.isMine && (
-                <div className={styles.commentForm}>
-                  <label className={styles.commentLabel}>
-                    코멘트 작성:
-                    <textarea
-                      className={styles.commentTextarea}
-                      value={commentInput}
-                      onChange={(e) => setCommentInput(e.target.value)}
-                      required
-                    />
-                  </label>
-                </div>
-              )}
-
-            {/* 버튼 */}
-            <div className={styles.modalButtons}>
-              {!selectedActivity.attended && selectedActivity.isMine && (
-                <button
-                  className={`${styles.button} ${styles.attendButton}`}
-                  onClick={handleAttend}
-                >
-                  출석하기
-                </button>
-              )}
-
-              {selectedActivity.attended &&
-                !selectedActivity.commented &&
-                selectedActivity.isMine && (
-                  <button
-                    type="button"
-                    className={`${styles.button} ${styles.submitButton}`}
-                    onClick={handleSubmitComment}
-                  >
-                    제출
-                  </button>
-                )}
-
-              <button
-                type="button"
-                className={`${styles.button} ${styles.closeButton}`}
-                onClick={() => setSelectedActivity(null)}
-              >
-                닫기
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {tab === 'my' ?
+        <MyActivity/> :
+        <WardActivity/>
+      }
     </div>
   );
 }

@@ -12,108 +12,74 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/activities")
+@RequestMapping("/api/{clubId}/activities")
 @RequiredArgsConstructor
 @Validated
 public class ActivityController {
     private final ActivityService service;
 
-    @PostMapping
-    public ResponseEntity<ActivityDto> create(@RequestBody ActivityDto dto) {
-        return ResponseEntity.status(201).body(service.create(dto));
+    @PostMapping("/create")
+    public ResponseEntity<ActivitySummaryDto> create(@PathVariable(name="clubId") Long clubId, @RequestBody ActivityDto dto) {
+        return ResponseEntity.status(201).body(service.create(clubId, dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ActivityDto> update(
-            @PathVariable Long id,
+    public ResponseEntity<ActivitySummaryDto> update(
+    			@PathVariable(name="clubId") Long clubId, 
+            @PathVariable(name="id") Long id,
             @RequestBody ActivityDto dto) {
-        return ResponseEntity.ok(service.update(id, dto));
+        return ResponseEntity.ok(service.update(clubId, id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable(name="clubId") Long clubId, @PathVariable(name="id") Long id) {
+        service.delete(clubId, id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/apply")
     public ResponseEntity<Void> apply(
-            @PathVariable Long id,
-            @RequestParam(value = "wardUsername", required = false) String wardUsername,
+    			@PathVariable(name="clubId") Long clubId, 
+            @PathVariable(name="id") Long id,
+            @RequestBody ParticipationRequestDto dto,
             Authentication auth) {
         String username = auth.getName();
-        service.apply(id, username, wardUsername);
+        service.apply(clubId, id, username, dto);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/attendance")
     public ResponseEntity<Void> attend(
-            @PathVariable Long id,
+    			@PathVariable(name="clubId") Long clubId, 
+            @PathVariable(name="id") Long id,
             Authentication auth) {
-        service.markAttendance(id, auth.getName());
+        service.markAttendance(clubId, id, auth.getName());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/participation/comment")
     public ResponseEntity<Void> commentParticipation(
-            @PathVariable Long id,
-            @Valid @RequestBody ParticipationCommentRequestDto dto,
+    			@PathVariable(name="clubId") Long clubId, 
+            @PathVariable(name="id") Long id,
+            @Valid @RequestBody ParticipationCommentDto dto,
             Authentication auth) {
-        service.addParticipationComment(id, auth.getName(), dto.getComment());
+        service.addParticipationComment(clubId, id, auth.getName(), dto.getComment());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/comments")
-    public ResponseEntity<ActivityCommentDto> addComment(
-            @PathVariable Long id,
-            @Valid @RequestBody ActivityCommentRequestDto dto,
-            Authentication auth) {
-        return ResponseEntity.ok(
-                service.addComment(id, auth.getName(), dto.getComment())
-        );
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ActivityDto>> listByMonth(
-            @RequestParam int year,
-            @RequestParam int month) {
-        return ResponseEntity.ok(service.findByMonth(year, month));
-    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ActivityDetailDto> detail(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getDetail(id));
+    public ResponseEntity<ActivityDetailDto> detail(@PathVariable(name="clubId") Long clubId, @PathVariable(name="id") Long id) {
+        return ResponseEntity.ok(service.getDetail(clubId, id));
     }
 
     @GetMapping("/summary")
     public ResponseEntity<List<ActivitySummaryDto>> summaryByMonth(
-            @RequestParam int year,
-            @RequestParam int month) {
-        List<ActivitySummaryDto> summaries = service.getActivitySummaries(year, month);
+    			@PathVariable(name="clubId") Long clubId, 	
+            @RequestParam(name="year") int year,
+            @RequestParam(name="month") int month) {
+        List<ActivitySummaryDto> summaries = service.getActivitySummaries(clubId, year, month);
         return ResponseEntity.ok(summaries);
     }
 
-    @GetMapping("/my")
-    public ResponseEntity<List<ActivityDto>> myApplications(Authentication auth) {
-        return ResponseEntity.ok(service.getMyAppliedActivities(auth.getName()));
-    }
-
-    @GetMapping("/wards")
-    public ResponseEntity<List<ActivityDto>> wardApplications(Authentication auth) {
-        return ResponseEntity.ok(service.getWardAppliedActivities(auth.getName()));
-    }
-
-    @GetMapping("/{id}/my")
-    public ResponseEntity<ActivityParticipationDto> myParticipation(
-            @PathVariable Long id,
-            Authentication auth) {
-        return ResponseEntity.ok(service.getMyParticipation(id, auth.getName()));
-    }
-
-    @GetMapping("/{id}/wards/{wardUsername}")
-    public ResponseEntity<ActivityParticipationDto> wardParticipation(
-            @PathVariable Long id,
-            @PathVariable String wardUsername) {
-        return ResponseEntity.ok(service.getWardParticipation(id, wardUsername));
-    }
 }

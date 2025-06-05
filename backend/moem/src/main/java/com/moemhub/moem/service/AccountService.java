@@ -30,6 +30,7 @@ public interface AccountService {
 
     // Retrieve all wards of a guardian
     List<AccountInfoDto> getWards(String guardianUsername);
+    List<AccountInfoDto> getWardsWithClub(Long clubId, String username);
 
     // Retrieve all clubs of a user
     List<ClubInfoDto> getMyClubsByUsername(String username);

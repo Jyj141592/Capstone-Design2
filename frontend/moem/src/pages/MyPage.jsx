@@ -171,12 +171,12 @@ export default function MyPage() {
       <section className={styles.clubSection}>
         <div className={styles.sectionHeader}>
           <h2>내 모임</h2>
-          {/* <button
+          <button
             className={styles.linkMore}
-            onClick={() => setShowClubModal(true)}
+            onClick={() => navigate('/myactivity')}
           >
-            모두보기 →
-          </button> */}
+            내 활동 보기 →
+          </button>
         </div>
         <ClubCardList clubs={myClubs} myClub={true}/>
         {showClubModal && (

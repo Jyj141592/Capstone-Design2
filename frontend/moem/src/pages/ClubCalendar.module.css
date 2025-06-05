@@ -131,6 +131,7 @@
   font-size: 16px;
   background-color: #f9fafb;
   transition: border-color 0.2s ease;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .modalForm input:focus,

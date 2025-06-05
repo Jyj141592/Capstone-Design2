@@ -5,18 +5,24 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "activities")
-@EntityListeners(AuditingEntityListener.class)
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "club_id", nullable = false)
+    private Club club;
+    
     @Column(nullable = false)
     private String name;
 
@@ -25,19 +31,14 @@ public class Activity {
     private String location;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDate date;
 
-    @Column(name = "thumbnail_url")
-    private String thumbnailUrl;
-
-    @Column(name = "max_capacity")
-    private Integer maxCapacity;
+    @Column(name = "thumbnail")
+    private String thumbnail;
 
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ActivityParticipation> participations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<ActivityComment> comments = new ArrayList<>();
+    
 }

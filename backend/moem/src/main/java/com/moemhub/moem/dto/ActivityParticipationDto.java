@@ -1,5 +1,7 @@
 package com.moemhub.moem.dto;
 
+import com.moemhub.moem.model.ActivityParticipation;
+
 import lombok.*;
 
 @Getter @Setter
@@ -7,8 +9,16 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ActivityParticipationDto {
+	private Long id;
     private Long activityId;
-    private String username;
+    private AccountInfoDto user;
     private boolean attended;
-    private String comment;
+    
+    public static ActivityParticipationDto toDto(ActivityParticipation ac) {
+    		return ActivityParticipationDto.builder().id(ac.getId())
+    				.activityId(ac.getActivity().getId())
+    				.user(AccountInfoDto.toDto(ac.getAccount()))
+    				.attended(ac.isAttended())
+    				.build();
+    }
 }

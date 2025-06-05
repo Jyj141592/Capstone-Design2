@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { fetchProfileImageUrl } from '../services/FileService';
 import styles from './SelectPerson.module.css'
 
-function SelectPerson({person, OnClick}) {
+function SelectPerson({person, OnClick, init}) {
     const [selected, setSelected] = useState(false);
     const [profile, setProfile] = useState('/images/avatar_default.jpg');
 
@@ -18,7 +18,7 @@ function SelectPerson({person, OnClick}) {
     return (
         <div
             className={`${styles.protegeCard} ${
-            selected ? styles.selected : ""
+            (typeof init === 'undefined' && selected) || init ? styles.selected : ""
             }`}
             onClick={() => {
                 const newSelected = !selected;

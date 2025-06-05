@@ -1,73 +1,65 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { apiClient } from "../api/ApiClient";
+import { ACTIVITY_API } from "../api/ActivityApi";
 import "react-calendar/dist/Calendar.css";
 import styles from "./ClubCalendar.module.css";
 
 export default function ClubCalendar() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2,'0');
+  const date = `${year}-${month}-${day}`;
+
   const navigate = useNavigate();
-  const { clubId } = useParams();
+  const { clubInfo, privilege } = useOutletContext();
 
-  const isAdmin = true; // 현재 관리자
+  const isAdmin = privilege === 'OWNER' || privilege === 'ADMIN'; // 현재 관리자
 
-  const [calendarList, setCalendarList] = useState([
-    {
-      id: 1,
-      date: "2024-05-07",
-      title: "일정 1",
-      place: "장소 1",
-      applicants: ["신청자1", "신청자2"],
-    },
-    {
-      id: 2,
-      date: "2024-05-12",
-      title: "일정 2",
-      place: "장소 2",
-      applicants: [],
-    },
-    {
-      id: 3,
-      date: "2024-05-25",
-      title: "일정 3",
-      place: "장소 3",
-      applicants: [],
-    },
-  ]);
+  const [calendarList, setCalendarList] = useState([]);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const [newSchedule, setNewSchedule] = useState({
-    date: "2025-05-25",
+    date: date,
     title: "",
     place: "",
     description: "",
   });
 
+  useEffect(()=> {
+    apiClient.get(ACTIVITY_API.FETCH_ACTIVITY_LIST(clubInfo.id, 2025, 6))
+      .then(res => setCalendarList(res.data))
+      .catch(err=>console.error(err));
+
+
+  },[]);
+
   // 활동 세부 페이지로 이동
   const handleScheduleClick = (id) => {
-    navigate(`/club/${clubId}/act/${id}`);
+    navigate(`/club/${clubInfo.id}/act/${id}`);
   };
 
   // 일정 생성 폼 제출
   const handleCreateSubmit = (e) => {
     e.preventDefault();
 
-    const nextId = calendarList.length
-      ? Math.max(...calendarList.map((item) => item.id)) + 1
-      : 1;
-
     const newItem = {
-      id: nextId,
       date: newSchedule.date,
-      title: newSchedule.title,
-      place: newSchedule.place,
-      applicants: [],
+      name: newSchedule.title,
+      location: newSchedule.place,
+      description: newSchedule.description,
     };
 
-    setCalendarList([...calendarList, newItem]);
+    apiClient.post(ACTIVITY_API.CREATE_ACTIVITY(clubInfo.id), newItem)
+      .then(res=>setCalendarList(prev=>[...prev, res.data]))
+      .catch(err=>console.error(err));
+
     setShowCreateModal(false);
 
     setNewSchedule({
-      date: "2025-05-25",
+      date: date,
       title: "",
       place: "",
       description: "",
@@ -170,13 +162,9 @@ export default function ClubCalendar() {
                       weekday: "short",
                     })}
                   </p>
-                  <h3 className={styles.scheduleTitle}>{item.title}</h3>
-                  <p className={styles.scheduleMeta}>장소: {item.place}</p>
-                  <p className={styles.scheduleApplicants}>
-                    {item.applicants.length > 0
-                      ? `참여자: ${item.applicants.join(", ")}`
-                      : "참여자: 없음"}
-                  </p>
+                  <h3 className={styles.scheduleTitle}>{item.name}</h3>
+                  <p className={styles.scheduleMeta}>장소: {item.location}</p>
+                  <p className={styles.scheduleMeta}>설명: {item.description}</p>
                 </div>
               </div>
             </div>

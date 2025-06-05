@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ParticipationCommentRequestDto {
+public class ParticipationCommentDto {
     @NotBlank(message = "comment is necessary")
     private String comment;
 }

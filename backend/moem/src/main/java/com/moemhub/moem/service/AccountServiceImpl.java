@@ -8,6 +8,7 @@ import com.moemhub.moem.dto.AccountInfoDto;
 import com.moemhub.moem.dto.AccountUpdateDto;
 import com.moemhub.moem.dto.ClubJoinRequestDto;
 import com.moemhub.moem.repository.ClubMemberRepository;
+import com.moemhub.moem.repository.ClubRepository;
 import com.moemhub.moem.repository.AccountRepository;
 import com.moemhub.moem.repository.ClubJoinRequestRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,6 +26,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final ClubMemberRepository clubMemberRepository;
     private final ClubJoinRequestRepository joinRequestRepository;
+    private final ClubRepository clubRepository;
 
     @Override
     public AccountInfoDto updateAccountInfoByUsername(String username, AccountUpdateDto dto) {
@@ -129,6 +131,15 @@ public class AccountServiceImpl implements AccountService {
         Account guardian = accountRepository.findByUsername(guardianUsername)
                 .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + guardianUsername));
         return List.copyOf(guardian.getWards()).stream().map(this::toDto).collect(Collectors.toList());
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccountInfoDto> getWardsWithClub(Long clubId, String username){
+    		Account guardian = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Guardian not found: " + username));
+    		Club club = clubRepository.findById(clubId).orElseThrow(() -> new EntityNotFoundException("Club not found: " + clubId));
+    		return guardian.getWards().stream().filter(ward->clubMemberRepository.findByClubAndAccount(club, guardian).isPresent())
+    				.map(AccountInfoDto::toDto).toList();
     }
 
     @Override

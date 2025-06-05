@@ -7,40 +7,32 @@ import java.util.List;
 public interface ActivityService {
 
     // Create activity
-    ActivityDto create(ActivityDto dto);
+    ActivitySummaryDto create(Long clubId, ActivityDto dto);
 
     // Update activity
-    ActivityDto update(Long activityId, ActivityDto dto);
+    ActivitySummaryDto update(Long clubId, Long activityId, ActivityDto dto);
 
     // Delete activity
-    void delete(Long activityId);
+    void delete(Long clubId, Long activityId);
 
     // Apply for activity(self + instead)
-    void apply(Long activityId, String username, String wardUsername);
+    void apply(Long clubId, Long activityId, String username, ParticipationRequestDto dto);
 
     // Mark for attended activity
-    void markAttendance(Long activityId, String username);
+    void markAttendance(Long clubId, Long activityId, String username);
 
     // Add comment for participated activity
-    void addParticipationComment(Long activityId, String username, String comment);
+    void addParticipationComment(Long clubId, Long activityId, String username, String comment);
 
-    // Add comment for activity
-    ActivityCommentDto addComment(Long activityId, String username, String content);
 
-    // Retrieve activity by year/month
-    List<ActivityDto> findByMonth(int year, int month);
 
     // Retrieve details for activity
-    ActivityDetailDto getDetail(Long activityId);
+    ActivityDetailDto getDetail(Long clubId, Long activityId);
 
     // Retrieve list for applied activity
-    List<ActivityDto> getMyAppliedActivities(String username);
-    List<ActivityDto> getWardAppliedActivities(String guardianUsername);
-
-    // Retrieve participation for activity
-    ActivityParticipationDto getMyParticipation(Long activityId, String username);
-    ActivityParticipationDto getWardParticipation(Long activityId, String wardUsername);
+    List<ActivityHistoryDto> getMyAppliedActivities(String username);
+    List<ActivityWardHistoryDto> getWardAppliedActivities(String guardianUsername);
 
     // Get summary for activity
-    List<ActivitySummaryDto> getActivitySummaries(int year, int month);
+    List<ActivitySummaryDto> getActivitySummaries(Long clubId, int year, int month);
 }

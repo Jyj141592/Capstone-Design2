@@ -220,6 +220,16 @@
   background-color: #1e3a8a;
 }
 
+.modalButtons button[type="submit"]:hover,
+.modalButtons .submitButton:hover {
+  background-color: #1e3a8a;
+}
+
+.modalButtons button[type="submit"]:disabled,
+.modalButtons .submitButton:hover {
+  background-color: #0e1c42;
+}
+
 .modalButtons button[type="button"],
 .modalButtons .cancelButton {
   background-color: #e5e7eb;

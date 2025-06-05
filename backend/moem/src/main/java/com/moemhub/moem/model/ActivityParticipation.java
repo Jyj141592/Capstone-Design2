@@ -1,5 +1,6 @@
 package com.moemhub.moem.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +24,4 @@ public class ActivityParticipation {
 
     @Column(nullable = false)
     private boolean attended;
-
-    @Lob
-    private String comment;
 }

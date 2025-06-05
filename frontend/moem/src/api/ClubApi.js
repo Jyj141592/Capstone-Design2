@@ -30,5 +30,4 @@ export const CLUB_API = {
     SET_JOIN_STATE: (request_id) => `/api/clubs/join-requests/${request_id}`,
     CREATE_BOARD: (club_id) => `/board/create/${club_id}`,
     UPDATE_BOARD: (club_id, board_id) => `/board/update/${club_id}/${board_id}`,
-
 }

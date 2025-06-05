@@ -52,6 +52,7 @@ function WritePost(){
 
     return (
         <div className={styles.container}>
+            <h1>글쓰기</h1>
             <div className={styles.inputSection}>
                 <input type='text' className={styles.titleInput} value={title} onChange={(e) => setTitle(e.target.value)} placeholder='제목을 입력하세요'/>
             </div>

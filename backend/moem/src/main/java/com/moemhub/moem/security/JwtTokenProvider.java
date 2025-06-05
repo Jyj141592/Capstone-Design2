@@ -46,10 +46,11 @@ public class JwtTokenProvider {
     }
 
     private String generateAccessToken(Authentication authentication) {
+    		int oneMonthMs = 30 * 24 * 60 * 60 * 1000;
         return Jwts.builder().issuer("MoEm")
                 .subject(authentication.getName())
                 .issuedAt(new Date())
-                .expiration(new Date((new Date()).getTime() + 30000000))
+                .expiration(new Date((new Date()).getTime() + oneMonthMs))
                 .signWith(secretKey).compact();
     }
     private String generateRefreshToken(Authentication authentication) {

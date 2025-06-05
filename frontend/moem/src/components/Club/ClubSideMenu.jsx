@@ -41,11 +41,13 @@ function ClubSideMenu({clubInfo, privilege}) {
                 <div className={styles.buttonGroupWrapper}>
                     <div className={styles.buttonGroup}>
                         <button className={styles.navButton} onClick={()=>navigate(`/club/${clubInfo.id}/calendar`)}>일정</button>
-                        <button className={styles.navButton} onClick={()=>navigate(`/club/${clubInfo.id}/mypage`)}>내 활동</button>
+                        {(privilege === 'OWNER' || privilege === 'ADMIN') &&
+                            <button className={styles.navButton} onClick={()=>navigate(`/club/${clubInfo.id}/manage`)}>관리</button>
+                        }
                     </div>
-                    {(privilege === 'OWNER' || privilege === 'ADMIN') &&
+                    {/* {(privilege === 'OWNER' || privilege === 'ADMIN') &&
                         <button className={styles.manageButton} onClick={()=>navigate(`/club/${clubInfo.id}/manage`)}>관리</button>
-                    }           
+                    }            */}
                 </div>
             </div>
             <div className={styles.boardSection}>

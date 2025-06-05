@@ -106,8 +106,8 @@ public class PostController {
     public ResponseEntity<List<PostDto.Response>> getPostsByBoardId(
             @PathVariable(name="clubId") Long clubId,
             @PathVariable(name="boardId") Long boardId,
-            @RequestParam(defaultValue="0") int page,
-            @RequestParam(defaultValue="10") int size) {
+            @RequestParam(name="page", defaultValue="0") int page,
+            @RequestParam(name="size", defaultValue="10") int size) {
 
         Page<Post> posts = postService.getPostsByBoardId(boardId, page, size);
         List<PostDto.Response> dtoList = posts.stream()

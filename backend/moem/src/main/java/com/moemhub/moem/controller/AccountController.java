@@ -2,10 +2,14 @@ package com.moemhub.moem.controller;
 
 import com.moemhub.moem.dto.AccountInfoDto;
 import com.moemhub.moem.dto.AccountUpdateDto;
+import com.moemhub.moem.dto.ActivityHistoryDto;
+import com.moemhub.moem.dto.ActivityWardHistoryDto;
 import com.moemhub.moem.dto.ClubInfoDto;
 import com.moemhub.moem.dto.ClubJoinRequestDto;
 import com.moemhub.moem.model.Account;
 import com.moemhub.moem.service.AccountService;
+import com.moemhub.moem.service.ActivityService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
+    private final ActivityService activityService;
 
     // Update account information
     @PutMapping("/info")
@@ -92,6 +97,13 @@ public class AccountController {
 
         return ResponseEntity.ok(accountService.getWards(guardianUsername));
     }
+    
+    @GetMapping("/wards/club/{clubId}")
+    public ResponseEntity<List<AccountInfoDto>> getWardsWithClub(
+            @PathVariable(name="clubId") Long clubId, Authentication authentication) {
+
+        return ResponseEntity.ok(accountService.getWardsWithClub(clubId, authentication.getName()));
+    }
 
     // Get all clubs of a user
     @GetMapping("/my-clubs")
@@ -110,5 +122,14 @@ public class AccountController {
         List<ClubJoinRequestDto.Response> requests =
                 accountService.getMyJoinRequests(username);
         return ResponseEntity.ok(requests);
+    }
+    @GetMapping("/my-activity")
+    public ResponseEntity<List<ActivityHistoryDto>> myApplications(Authentication auth) {
+        return ResponseEntity.ok(activityService.getMyAppliedActivities(auth.getName()));
+    }
+
+    @GetMapping("/wards-activity")
+    public ResponseEntity<List<ActivityWardHistoryDto>> wardApplications(Authentication auth) {
+        return ResponseEntity.ok(activityService.getWardAppliedActivities(auth.getName()));
     }
 }
