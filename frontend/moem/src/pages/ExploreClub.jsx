@@ -8,7 +8,7 @@ import { useAuth } from "../auth/AuthContext";
 
 function ExploreClub() {
   const [clubs, setClubs] = useState([]);
-  const [filter, setFilter] = useState(null);
+  const [filter, setFilter] = useState("name");
   const [keyword, setKeyword] = useState(null);
   const authContext = useAuth();
   const navigate = useNavigate();
@@ -40,9 +40,10 @@ function ExploreClub() {
     setFilter(selection);
   }
   function onKeyword(key) {
-    setKeyword(keyword);
+    setKeyword(key);
   }
   function handleSearch() {
+    console.log(filter, keyword);
     let api = CLUB_API.SEARCH_CLUB;
     if (filter == "name"){
       api = `${api}?name=${keyword}`;
@@ -63,7 +64,7 @@ function ExploreClub() {
       <div className={styles.topBar}>
         <select
           className={styles.filterSelect}
-          onChange={(e) => onSelection(e)}
+          onChange={(e) => onSelection(e.target.value)}
         >
           <option value="name">이름</option>
           <option value="interest">관심사</option>
@@ -72,7 +73,7 @@ function ExploreClub() {
           type="text"
           className={styles.searchInput}
           placeholder="모임 검색"
-          onChange={(e) => onKeyword(e)}
+          onChange={(e) => onKeyword(e.target.value)}
         />
         <button className={styles.searchButton} onClick={handleSearch}>
           검색
